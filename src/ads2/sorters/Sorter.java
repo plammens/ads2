@@ -1,19 +1,15 @@
 package ads2.sorters;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 public interface Sorter {
 
     /** In-place sort */
-    <T extends Comparable<T>>
-    void sort(List<T> arr);
+    void sort(int[] arr);
 
-    /** Sorted copy */
-    default <T extends Comparable<T>>
-    List<T> sorted(List<T> arr) {
-        List<T> copy = new ArrayList<T>(arr.size());
-        copy.addAll(arr);
+    /** Return a sorted copy */
+    default int[] sorted(int[] arr) {
+        int[] copy = Arrays.copyOf(arr, arr.length);
         sort(copy);
         return copy;
     }

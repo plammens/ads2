@@ -1,5 +1,8 @@
 package ads2;
 
+import static ads2.utils.Utils.isSorted;
+import static ads2.utils.Utils.toIntArray;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -7,8 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import ads2.sorters.QuickSort1;
 import ads2.sorters.Sorter;
+import ads2.sorters.ThreeWayQuickSort;
 
 
 public class TestSortingAlgorithms {
@@ -22,17 +25,11 @@ public class TestSortingAlgorithms {
         return list;
     }
 
-    public static boolean isSorted(List<Integer> arr) {
-        for (int i = 1; i < arr.size(); ++i)
-            if (arr.get(i - 1) > arr.get(i)) return false;
-        return true;
-    }
-
     public static void main(String[] args) throws FileNotFoundException {
-        Sorter sorter = new QuickSort1();
+        Sorter sorter = new ThreeWayQuickSort();
 
         for (String path : args) {
-            List<Integer> arr = readIntList(new FileInputStream(path));
+            int[] arr = toIntArray(readIntList(new FileInputStream(path)));
             sorter.sort(arr);
             System.out.println(isSorted(arr));
         }

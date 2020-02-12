@@ -1,17 +1,15 @@
 package ads2.sorters;
 
-import java.util.List;
-
 public class InsertionSort implements Sorter {
 
-    public <T extends Comparable<T>> void sort(List<T> arr) {
-        int n = arr.size();
-        for (int j = 1; j < n; ++j) {
-            T key = arr.get(j);
+    @Override
+    public void sort(int[] arr) {
+        for (int j = 1; j < arr.length; ++j) {
+            int key = arr[j];
             int i = j - 1;
-            for (; i >= 0 && arr.get(i).compareTo(key) > 0; --i)
-                arr.set(i + 1, arr.get(i));
-            arr.set(i + 1, key);
+            for (; i >= 0 && arr[i] > key; --i)
+                arr[i + 1] = arr[i];
+            arr[i + 1] = key;
         }
     }
 
