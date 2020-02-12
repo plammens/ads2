@@ -1,9 +1,12 @@
 package ads2.utils;
 
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 /** Various static utilities */
-public class Utils {
+public final class Utils {
 
     /**
      * Swap two elements of an array
@@ -17,6 +20,13 @@ public class Utils {
         arr[j] = xi;
     }
 
+    /** Determine whether an array is sorted */
+    public static boolean isSorted(int[] arr) {
+        for (int i = 1; i < arr.length; ++i)
+            if (arr[i - 1] > arr[i]) return false;
+        return true;
+    }
+
     /** Convert a {@link List<Integer>} to an {@code int[]} array */
     public static int[] toIntArray(List<Integer> arr) {
         int[] copy = new int[arr.size()];
@@ -25,11 +35,13 @@ public class Utils {
         return copy;
     }
 
-    /** Determine whether an array is sorted */
-    public static boolean isSorted(int[] arr) {
-        for (int i = 1; i < arr.length; ++i)
-            if (arr[i - 1] > arr[i]) return false;
-        return true;
+    public static List<Integer> readIntList(InputStream in) {
+        Scanner sc = new Scanner(in);
+        List<Integer> list = new ArrayList<>();
+        while (sc.hasNextInt())
+            list.add(sc.nextInt());
+        sc.close();
+        return list;
     }
 
 }
