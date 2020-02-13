@@ -27,4 +27,9 @@ public class CutoffQuickSort extends QuickSort {
         if ((r - p + 1) >= cutoffSize) super.quicksort(arr, p, r);
     }
 
+    @Override
+    public String toString() {
+        return super.toString() + "(cutoffSize=" + cutoffSize + ")";
+    }
+
 }

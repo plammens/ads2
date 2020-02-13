@@ -61,4 +61,8 @@ public class QuickSort implements Sorter {
         return new Partition(new ArrayRange(p, i), ArrayRange.inclusive(i + 1, r));
     }
 
+    @Override
+    public String toString() {
+        return getClass().getSimpleName();
+    }
 }
