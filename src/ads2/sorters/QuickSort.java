@@ -2,6 +2,7 @@ package ads2.sorters;
 
 import static ads2.utils.Utils.swap;
 
+import ads2.Sorter;
 import ads2.utils.ArrayRange;
 
 public class QuickSort implements Sorter {
@@ -24,7 +25,7 @@ public class QuickSort implements Sorter {
     /**
      * Top-level in-place quicksort (whole array)
      * <p>
-     * (arr is guaranteed to be sorted afterwards)
+     * ({@code arr} is guaranteed to be sorted afterwards)
      */
     protected void quicksort(int[] arr) {
         quicksort(arr, 0, arr.length - 1);

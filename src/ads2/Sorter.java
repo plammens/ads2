@@ -1,4 +1,4 @@
-package ads2.sorters;
+package ads2;
 
 import java.util.Arrays;
 
