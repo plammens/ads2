@@ -1,13 +1,16 @@
-package ads2;
+package guid2475444L.ads2.ae1;
 
-import static ads2.utils.Utils.*;
+import static guid2475444L.ads2.ae1.utils.Utils.*;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-import ads2.sorters.*;
+import guid2475444L.ads2.ae1.sorters.CutoffQuickSort;
+import guid2475444L.ads2.ae1.sorters.MedianOfThreeQuickSort;
+import guid2475444L.ads2.ae1.sorters.QuickSort;
+import guid2475444L.ads2.ae1.sorters.ThreeWayQuickSort;
 
 
 public class TestSortingAlgorithms {

@@ -1,9 +1,9 @@
-package ads2.sorters;
+package guid2475444L.ads2.ae1.sorters;
 
-import static ads2.utils.Utils.swap;
+import static guid2475444L.ads2.ae1.utils.Utils.swap;
 
-import ads2.Sorter;
-import ads2.utils.ArrayRange;
+import guid2475444L.ads2.ae1.Sorter;
+import guid2475444L.ads2.ae1.utils.ArrayRange;
 
 public class QuickSort implements Sorter {
 

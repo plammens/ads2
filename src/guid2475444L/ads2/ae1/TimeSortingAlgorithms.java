@@ -1,7 +1,7 @@
-package ads2;
+package guid2475444L.ads2.ae1;
 
-import static ads2.utils.Utils.readIntList;
-import static ads2.utils.Utils.toIntArray;
+import static guid2475444L.ads2.ae1.utils.Utils.readIntList;
+import static guid2475444L.ads2.ae1.utils.Utils.toIntArray;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -13,10 +13,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import ads2.sorters.CutoffQuickSort;
-import ads2.sorters.MedianOfThreeQuickSort;
-import ads2.sorters.QuickSort;
-import ads2.sorters.ThreeWayQuickSort;
+import guid2475444L.ads2.ae1.sorters.CutoffQuickSort;
+import guid2475444L.ads2.ae1.sorters.MedianOfThreeQuickSort;
+import guid2475444L.ads2.ae1.sorters.QuickSort;
+import guid2475444L.ads2.ae1.sorters.ThreeWayQuickSort;
 import org.apache.commons.cli.*;
 
 
@@ -40,7 +40,8 @@ public class TimeSortingAlgorithms {
         final String algorithmsDescription =
                 "specify the sorting algorithms to time against input as space separated tokens "
                         + "following the syntax `<sorter-name>[(<constructor-arg>)]`, where "
-                        + "<sorter-name> is the unqualified name of a class in ads2.sorters and "
+                        + "<sorter-name> is the unqualified name of a class in guid2475444L.ads2"
+                        + ".ae1.sorters and "
                         + "<constructor-arg> is the constructor argument, if applicable.";
 
         CLI_OPTIONS.addOption("h", "help", false, "show this help message and exit");
@@ -121,7 +122,8 @@ public class TimeSortingAlgorithms {
      *         syntax:
      *         <pre>{@code <sorter-name>[(<constructor-arg>)]}</pre>
      *         Where {@code <sorter-name>} must be the unqualified name of a class in {@link
-     *         ads2.sorters} that implements {@link Sorter}, and the {@code <constructor-arg>} must
+     *         guid2475444L.ads2.ae1.sorters} that implements {@link Sorter}, and the {@code
+     *         <constructor-arg>} must
      *         only be specified if applicable to that sorter class.
      *         <br><br>
      *         Examples:
@@ -142,7 +144,7 @@ public class TimeSortingAlgorithms {
         if (!matcher.matches())
             throw new ParseException("sorter specification not recognized: " + spec);
 
-        String className = "ads2.sorters." + matcher.group("class");
+        String className = "guid2475444L.ads2.ae1.sorters." + matcher.group("class");
         String arg = matcher.group("arg");
 
         @SuppressWarnings("unchecked")
