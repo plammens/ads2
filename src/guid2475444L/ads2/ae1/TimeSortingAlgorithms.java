@@ -13,10 +13,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import guid2475444L.ads2.ae1.sorter.Sorter;
-import guid2475444L.ads2.ae1.sorters.CutoffQuickSort;
-import guid2475444L.ads2.ae1.sorters.MedianOfThreeQuickSort;
+import guid2475444L.ads2.ae1.sorters.MergeSort;
 import guid2475444L.ads2.ae1.sorters.QuickSort;
-import guid2475444L.ads2.ae1.sorters.ThreeWayQuickSort;
 import guid2475444L.ads2.ae1.utils.Profiler;
 import org.apache.commons.cli.*;
 
@@ -31,11 +29,7 @@ public class TimeSortingAlgorithms {
             "(?<class>\\w+)(?:\\((?<arg>\\d*)\\))?");
     private static final List<Sorter> DEFAULT_SORTERS = Arrays.asList(new Sorter[]{
             new QuickSort(),
-            new CutoffQuickSort(3),
-            new CutoffQuickSort(50),
-            new CutoffQuickSort(200),
-            new MedianOfThreeQuickSort(),
-            new ThreeWayQuickSort(),
+            new MergeSort()
     });
 
     static {
@@ -44,7 +38,7 @@ public class TimeSortingAlgorithms {
                 + "input as space separated tokens following the syntax `<sorter-name>["
                 + "(<constructor-arg>)]`, where <sorter-name> is the unqualified name of a class "
                 + "in guid2475444L.ads2.ae1.sorters and <constructor-arg> is the constructor "
-                + "argument, if applicable - defaults to all quicksort algorithms.";
+                + "argument, if applicable - defaults to QuickSort and MergeSort.";
         final String repeatsDescription = "number of times to repeat each measurement (so that "
                 + "aggregates like min and mean can be calculated) - defaults to 5";
 
@@ -174,9 +168,10 @@ public class TimeSortingAlgorithms {
                 file.close();
                 System.out.println();
                 for (Sorter sorter : sorters) {
-                    Profiler profiler = new Profiler(() -> sorter.sorted(arr), 5);
+                    System.out.printf("%-40s", sorter + ":");
+                    Profiler profiler = new Profiler(() -> sorter.sorted(arr), repeats);
                     Profiler.Results res = profiler.profile(Executors.newCachedThreadPool());
-                    System.out.printf("%-40s%s\n", sorter + ":", res);
+                    System.out.println(res);
                 }
 
                 System.out.println("-".repeat(OUTPUT_WIDTH));
