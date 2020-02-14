@@ -13,6 +13,7 @@ public class CutoffQuickSort extends QuickSort {
      */
     public CutoffQuickSort(int cutoffSize) {
         this.cutoffSize = cutoffSize;
+        this.initParams = "cutoffSize=" + cutoffSize;
     }
 
     /**
@@ -30,11 +31,6 @@ public class CutoffQuickSort extends QuickSort {
     @Override
     protected void quicksort(int[] arr, int p, int r) {
         if ((r - p + 1) >= cutoffSize) super.quicksort(arr, p, r);
-    }
-
-    @Override
-    public String toString() {
-        return super.toString() + "(cutoffSize=" + cutoffSize + ")";
     }
 
 }

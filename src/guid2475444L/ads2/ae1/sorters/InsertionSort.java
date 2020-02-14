@@ -1,9 +1,9 @@
 package guid2475444L.ads2.ae1.sorters;
 
-import guid2475444L.ads2.ae1.Sorter;
+import guid2475444L.ads2.ae1.sorter.BaseSorter;
 
 
-public class InsertionSort implements Sorter {
+public class InsertionSort extends BaseSorter {
 
     @Override
     public void sort(int[] arr) {

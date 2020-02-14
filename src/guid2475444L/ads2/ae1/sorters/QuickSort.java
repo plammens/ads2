@@ -2,11 +2,11 @@ package guid2475444L.ads2.ae1.sorters;
 
 import static guid2475444L.ads2.ae1.utils.Utils.swap;
 
-import guid2475444L.ads2.ae1.Sorter;
+import guid2475444L.ads2.ae1.sorter.BaseSorter;
 import guid2475444L.ads2.ae1.utils.ArrayRange;
 
 
-public class QuickSort implements Sorter {
+public class QuickSort extends BaseSorter {
 
     /** Tuple of array ranges representing a quicksort partition */
     protected static class Partition {
@@ -63,11 +63,6 @@ public class QuickSort implements Sorter {
 
         swap(arr, i, r);
         return new Partition(new ArrayRange(p, i), ArrayRange.inclusive(i + 1, r));
-    }
-
-    @Override
-    public String toString() {
-        return getClass().getSimpleName();
     }
 
 }

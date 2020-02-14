@@ -12,6 +12,7 @@ import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import guid2475444L.ads2.ae1.sorter.Sorter;
 import guid2475444L.ads2.ae1.sorters.CutoffQuickSort;
 import guid2475444L.ads2.ae1.sorters.MedianOfThreeQuickSort;
 import guid2475444L.ads2.ae1.sorters.QuickSort;
@@ -160,7 +161,7 @@ public class TimeSortingAlgorithms {
         System.out.println("against the following input");
         for (String path : inputFiles)
             System.out.println("\t" + path);
-        System.out.printf("with %d repeats per combination\n", repeats);
+        System.out.printf("with %d repeat(s) per combination\n", repeats);
 
         for (String path : inputFiles) {
             System.out.println();
