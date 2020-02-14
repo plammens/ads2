@@ -5,16 +5,19 @@ import static guid2475444L.ads2.ae1.utils.Utils.swap;
 import guid2475444L.ads2.ae1.Sorter;
 import guid2475444L.ads2.ae1.utils.ArrayRange;
 
+
 public class QuickSort implements Sorter {
 
     /** Tuple of array ranges representing a quicksort partition */
     protected static class Partition {
+
         public final ArrayRange first, second;
 
         public Partition(ArrayRange first, ArrayRange second) {
             this.first = first;
             this.second = second;
         }
+
     }
 
     @Override
@@ -66,4 +69,5 @@ public class QuickSort implements Sorter {
     public String toString() {
         return getClass().getSimpleName();
     }
+
 }

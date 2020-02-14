@@ -8,8 +8,8 @@ public class CutoffQuickSort extends QuickSort {
 
     /**
      * Construct a new quicksorter with a certain cutoff size
-     * @param cutoffSize quicksort recursion will end at sub-arrays of this size or smaller
-     *         (the sorting will be then completed with {@link InsertionSort})
+     * @param cutoffSize quicksort recursion will end at sub-arrays of this size or smaller (the
+     *                   sorting will be then completed with {@link InsertionSort})
      */
     public CutoffQuickSort(int cutoffSize) {
         this.cutoffSize = cutoffSize;

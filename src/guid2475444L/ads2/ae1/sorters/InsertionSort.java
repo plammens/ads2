@@ -2,6 +2,7 @@ package guid2475444L.ads2.ae1.sorters;
 
 import guid2475444L.ads2.ae1.Sorter;
 
+
 public class InsertionSort implements Sorter {
 
     @Override

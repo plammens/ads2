@@ -54,7 +54,7 @@ public class TimeSortingAlgorithms {
      * Time a sorting algorithm on an array. The sorting will be done as a copy so that {@code arr
      * is not mutated}.
      * @param sorter sorting algorithm to use
-     * @param arr array to sort
+     * @param arr    array to sort
      * @return time elapsed to execute {@code sorter.sorted(arr);}
      */
     public static Duration timeSorter(Sorter sorter, int[] arr) {
@@ -118,20 +118,18 @@ public class TimeSortingAlgorithms {
     /**
      * Construct an instance of a sorting algorithm (a class implementing {@link Sorter}) based on a
      * String specification.
-     * @param spec string specification of the sorting algorithm. Must have the following
-     *         syntax:
-     *         <pre>{@code <sorter-name>[(<constructor-arg>)]}</pre>
-     *         Where {@code <sorter-name>} must be the unqualified name of a class in {@link
-     *         guid2475444L.ads2.ae1.sorters} that implements {@link Sorter}, and the {@code
-     *         <constructor-arg>} must
-     *         only be specified if applicable to that sorter class.
-     *         <br><br>
-     *         Examples:
-     *         <ul>
-     *             <li>{@code "InsertionSort"}</li>
-     *             <li>{@code "CutoffQuickSort(50)"}</li>
-     *             <li>{@code "QuickSort"}</li>
-     *         </ul>
+     * @param spec string specification of the sorting algorithm. Must have the following syntax:
+     *             <pre>{@code <sorter-name>[(<constructor-arg>)]}</pre>
+     *             Where {@code <sorter-name>} must be the unqualified name of a class in {@link
+     *             guid2475444L.ads2.ae1.sorters} that implements {@link Sorter}, and the {@code
+     *             <constructor-arg>} must only be specified if applicable to that sorter class.
+     *             <br><br>
+     *             Examples:
+     *             <ul>
+     *                 <li>{@code "InsertionSort"}</li>
+     *                 <li>{@code "CutoffQuickSort(50)"}</li>
+     *                 <li>{@code "QuickSort"}</li>
+     *             </ul>
      * @return a new {@link Sorter} instance as specified in {@code spec}
      * @throws ParseException               if {@code spec} doesn't abide by the syntax given above
      * @throws ReflectiveOperationException if there was an error loading the class specified by
