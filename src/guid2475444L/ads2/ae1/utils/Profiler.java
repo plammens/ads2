@@ -15,7 +15,8 @@ import java.util.concurrent.*;
  * <p><br>
  * A single invocation of {@link #timeIt(Runnable)} is referred to as a "repeat". Doing multiple
  * repeats allows for more statistically significant results, with less random noise in the
- * timings.
+ * timings—caused by the fact that we're measuring wall-clock time, which is non-deterministic
+ * (depends on system load at time of execution) and platform-dependant.
  */
 public class Profiler {
 
