@@ -5,11 +5,10 @@ import static guid2475444L.ads2.ae1.utils.Utils.toIntArray;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.time.Duration;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,17 +16,19 @@ import guid2475444L.ads2.ae1.sorters.CutoffQuickSort;
 import guid2475444L.ads2.ae1.sorters.MedianOfThreeQuickSort;
 import guid2475444L.ads2.ae1.sorters.QuickSort;
 import guid2475444L.ads2.ae1.sorters.ThreeWayQuickSort;
+import guid2475444L.ads2.ae1.utils.Profiler;
 import org.apache.commons.cli.*;
 
 
 public class TimeSortingAlgorithms {
 
-    public static final String CLI_SYNOPSIS =
-            "TimeSortingAlgorithms [--help] <input-files...> [--algorithms <sorters...>]]";
-    public static final Options CLI_OPTIONS = new Options();
-    public static final Pattern SORTER_SPEC_PATTERN = Pattern.compile(
+    public static final int OUTPUT_WIDTH = 75;
+    private static final String CLI_SYNOPSIS =
+            "TimeSortingAlgorithms [-h] <input-files...> [-a <sorters...>] [-r <repeats>]";
+    private static final Options CLI_OPTIONS = new Options();
+    private static final Pattern SORTER_SPEC_PATTERN = Pattern.compile(
             "(?<class>\\w+)(?:\\((?<arg>\\d*)\\))?");
-    public static final List<Sorter> DEFAULT_SORTERS = Arrays.asList(new Sorter[]{
+    private static final List<Sorter> DEFAULT_SORTERS = Arrays.asList(new Sorter[]{
             new QuickSort(),
             new CutoffQuickSort(3),
             new CutoffQuickSort(50),
@@ -37,31 +38,20 @@ public class TimeSortingAlgorithms {
     });
 
     static {
-        final String algorithmsDescription =
-                "specify the sorting algorithms to time against input as space separated tokens "
-                        + "following the syntax `<sorter-name>[(<constructor-arg>)]`, where "
-                        + "<sorter-name> is the unqualified name of a class in guid2475444L.ads2"
-                        + ".ae1.sorters and "
-                        + "<constructor-arg> is the constructor argument, if applicable.";
+        // set up CLI options
+        final String algorithmsDescription = "specify the sorting algorithms to time against "
+                + "input as space separated tokens following the syntax `<sorter-name>["
+                + "(<constructor-arg>)]`, where <sorter-name> is the unqualified name of a class "
+                + "in guid2475444L.ads2.ae1.sorters and <constructor-arg> is the constructor "
+                + "argument, if applicable - defaults to all quicksort algorithms.";
+        final String repeatsDescription = "number of times to repeat each measurement (so that "
+                + "aggregates like min and mean can be calculated) - defaults to 5";
 
         CLI_OPTIONS.addOption("h", "help", false, "show this help message and exit");
         CLI_OPTIONS.addOption(Option.builder("a").longOpt("algorithms")
                                     .hasArgs().argName("sorter...")
                                     .desc(algorithmsDescription).build());
-    }
-
-    /**
-     * Time a sorting algorithm on an array. The sorting will be done as a copy so that {@code arr
-     * is not mutated}.
-     * @param sorter sorting algorithm to use
-     * @param arr    array to sort
-     * @return time elapsed to execute {@code sorter.sorted(arr);}
-     */
-    public static Duration timeSorter(Sorter sorter, int[] arr) {
-        Instant start = Instant.now();
-        sorter.sorted(arr);
-        Instant end = Instant.now();
-        return Duration.between(start, end);
+        CLI_OPTIONS.addOption(new Option("r", "repeats", true, repeatsDescription));
     }
 
     public static void main(String[] args) throws ParseException {
@@ -85,7 +75,8 @@ public class TimeSortingAlgorithms {
 
         List<Sorter> sorters = parseSorters(cmdLine.getOptionValues("algorithms"));
         String[] inputFiles = cmdLine.getArgs();
-        return new TimeSortingAlgorithms(sorters, inputFiles);
+        int repeats = Integer.parseInt(cmdLine.getOptionValue("repeats", "5"));
+        return new TimeSortingAlgorithms(sorters, inputFiles, repeats);
     }
 
     /**
@@ -154,40 +145,43 @@ public class TimeSortingAlgorithms {
 
     private List<Sorter> sorters;
     private String[] inputFiles;
+    private int repeats;
 
-    public TimeSortingAlgorithms(List<Sorter> sorters, String[] inputFiles) {
+    private TimeSortingAlgorithms(List<Sorter> sorters, String[] inputFiles, int repeats) {
         this.sorters = sorters;
         this.inputFiles = inputFiles;
+        this.repeats = repeats;
     }
 
     private void runTimings() {
-        System.out.println("Timing the algorithm(s):");
+        System.out.println("Timing the algorithm(s)");
         for (Sorter sorter : sorters)
             System.out.println("\t" + sorter);
-        System.out.println("against the following input:");
+        System.out.println("against the following input");
         for (String path : inputFiles)
             System.out.println("\t" + path);
+        System.out.printf("with %d repeats per combination\n", repeats);
 
         for (String path : inputFiles) {
             System.out.println();
             try {
                 FileInputStream file = new FileInputStream(path);
-                System.out.println("--------------------------------------------------");
+                System.out.println("-".repeat(OUTPUT_WIDTH));
                 System.out.println("INPUT: " + path);
 
                 int[] arr = toIntArray(readIntList(file));
                 file.close();
                 System.out.println();
                 for (Sorter sorter : sorters) {
-                    Duration t = timeSorter(sorter, arr);
-                    System.out.printf("%s: %ds %09dns\n", sorter, t.getSeconds(), t.getNano());
+                    Profiler profiler = new Profiler(() -> sorter.sorted(arr), 5);
+                    Profiler.Results res = profiler.profile(Executors.newCachedThreadPool());
+                    System.out.printf("%-40s%s\n", sorter + ":", res);
                 }
 
-                System.out.println("--------------------------------------------------");
+                System.out.println("-".repeat(OUTPUT_WIDTH));
             } catch (IOException e) {
                 System.err.println(e);
             }
-
         }
     }
 
