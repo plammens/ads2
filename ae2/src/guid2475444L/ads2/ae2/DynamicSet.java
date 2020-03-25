@@ -5,21 +5,21 @@ package guid2475444L.ads2.ae2;
  * <p>
  * The Dynamic Set is an abstract data type (ADT) that can store distinct elements, without any
  * particular order.
- * @param <T> type of the elements stored in this set
+ * @param <E> type of the elements stored in this set
  */
-public interface DynamicSet<T> {
+public interface DynamicSet<E> {
 
     /**
      * Add an element to this set, if not present already.
      * @param x value of the element to be added
      */
-    void add(T x);
+    void add(E x);
 
     /**
      * Remove an element from this set, if present.
      * @param x value of the element to be removed
      */
-    void remove(T x);
+    void remove(E x);
 
     /**
      * Returns true if this set contains the specified element. More formally, returns true if and
@@ -48,21 +48,21 @@ public interface DynamicSet<T> {
      * @param other set to unite with {@code this}
      * @return a new set consisting of the union of {@code this} and {@code other}
      */
-    DynamicSet<T> union(DynamicSet<? extends T> other);
+    DynamicSet<E> union(DynamicSet<? extends E> other);
 
     /**
      * Set intersection: elements that are in both {@code this} and {@code other}
      * @param other set to intersect with {@code this}
      * @return a new set consisting of the intersection of {@code this} and {@code other}
      */
-    DynamicSet<T> intersect(DynamicSet<? extends T> other);
+    DynamicSet<E> intersect(DynamicSet<? extends E> other);
 
     /**
      * Set difference: elements that are in {@code this} that are not in {@code other}
      * @param other set to unite with {@code this}
      * @return a new set consisting of the difference {@code this} minus {@code other}
      */
-    DynamicSet<T> minus(DynamicSet<? extends T> other);
+    DynamicSet<E> minus(DynamicSet<? extends E> other);
 
     /** @return whether {@code this} is a subset of {@code other} */
     boolean isSubsetOf(DynamicSet<?> other);
