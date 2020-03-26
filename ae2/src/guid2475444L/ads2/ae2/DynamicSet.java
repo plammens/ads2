@@ -1,5 +1,8 @@
 package guid2475444L.ads2.ae2;
 
+import java.util.Collection;
+
+
 /**
  * Defines the dynamic set ADT.
  * <p>
@@ -7,19 +10,19 @@ package guid2475444L.ads2.ae2;
  * particular order.
  * @param <E> type of the elements stored in this set
  */
-public interface DynamicSet<E> {
+public interface DynamicSet<E> extends Collection<E> {
 
     /**
      * Add an element to this set, if not present already.
      * @param x value of the element to be added
      */
-    void add(E x);
+    boolean add(E x);
 
     /**
      * Remove an element from this set, if present.
      * @param x value of the element to be removed
      */
-    void remove(E x);
+    boolean remove(Object x);
 
     /**
      * Returns true if this set contains the specified element. More formally, returns true if and
