@@ -122,7 +122,7 @@ class DoublyLinkedListTest {
         assertPropertiesHaveNotChanged();
 
         assertTrue(list.removeAll(List.of(1, 7)));
-        assertEquals(INIT_SIZE - 2, list.size());
+        assertEquals(INIT_SIZE - 3, list.size());
         assertTrue(list.removeAll(INIT_LIST));
         assertEquals(0, list.size());
         assertTrue(list.isEmpty());
