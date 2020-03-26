@@ -201,27 +201,13 @@ public class DoublyLinkedList<E> implements List<E> {
     }
 
     @Override
-    public boolean removeAll(Collection<?> c) {
-        boolean changed = false;
-        for (Object o : c) if (remove(o)) changed = true;
-        return changed;
+    public boolean removeAll(@NotNull Collection<?> c) {
+        return removeIf((elem) -> Utils.contains(c, elem));
     }
 
     @Override
     public boolean retainAll(@NotNull Collection<?> c) {
-        boolean changed = false;
-        for (Iterator<E> iter = iterator(); iter.hasNext(); ) {
-            // use try-catch to account for unsupported elements:
-            boolean remove;
-            try {
-                remove = !c.contains(iter.next());
-            } catch (NullPointerException | ClassCastException e) { remove = true; }
-            if (remove) {
-                iter.remove();
-                changed = true;
-            }
-        }
-        return changed;
+        return removeIf((elem) -> !Utils.contains(c, elem));
     }
 
     @Override
