@@ -452,9 +452,7 @@ public class DoublyLinkedList<E> implements List<E> {
 
         @Override
         public void add(E e) {
-            checkNextOrPreviousHasBeenCalled();
-            insert(lastAccessed, e);
-            lastAccessed = null;
+            insert(node, e);
         }
 
         /** Advance the cursor position by one */
