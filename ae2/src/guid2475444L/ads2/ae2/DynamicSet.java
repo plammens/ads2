@@ -12,6 +12,8 @@ import org.jetbrains.annotations.NotNull;
  * particular order. The elements must implement {@link Comparable} nevertheless so that certain
  * implementations can be possible.
  * <p>
+ * Cannot contain {@code null} values.
+ * <p>
  * Note: this interface extends {@link Collection} just because it defines useful methods and so
  * that implementing objects can be passed to functions with a Collection as parameter, but all the
  * relevant operations have been redefined here in {@link DynamicSet}.
