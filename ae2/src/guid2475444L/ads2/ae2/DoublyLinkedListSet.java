@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
  * {@link DynamicSet} implementation using a {@link DoublyLinkedList} as the backing container
  * @author - Paolo Lammens (2475444L)
  */
-public class DoublyLinkedListSet<E> implements DynamicSet<E> {
+public class DoublyLinkedListSet<E extends Comparable<E>> implements DynamicSet<E> {
 
     private DoublyLinkedList<E> list = new DoublyLinkedList<>();
 
@@ -43,7 +43,7 @@ public class DoublyLinkedListSet<E> implements DynamicSet<E> {
     }
 
     @Override
-    public DynamicSet<E> union(DynamicSet<? extends E> other) {
+    public DynamicSet<E> union(@NotNull DynamicSet<? extends E> other) {
         DynamicSet<E> union = new DoublyLinkedListSet<>();
         union.addAll(this);
         union.addAll(other);
@@ -51,7 +51,7 @@ public class DoublyLinkedListSet<E> implements DynamicSet<E> {
     }
 
     @Override
-    public DynamicSet<E> intersect(DynamicSet<? extends E> other) {
+    public DynamicSet<E> intersect(@NotNull DynamicSet<? extends E> other) {
         DynamicSet<E> intersection = new DoublyLinkedListSet<>();
         for (E elem : this)
             if (other.contains(elem)) intersection.add(elem);
@@ -59,7 +59,7 @@ public class DoublyLinkedListSet<E> implements DynamicSet<E> {
     }
 
     @Override
-    public DynamicSet<E> minus(DynamicSet<? extends E> other) {
+    public DynamicSet<E> minus(@NotNull DynamicSet<? extends E> other) {
         DynamicSet<E> difference = new DoublyLinkedListSet<>();
         difference.addAll(this);
         difference.removeAll(other);
@@ -67,7 +67,7 @@ public class DoublyLinkedListSet<E> implements DynamicSet<E> {
     }
 
     @Override
-    public boolean isSubsetOf(DynamicSet<?> other) {
+    public boolean isSubsetOf(@NotNull DynamicSet<?> other) {
         return other.containsAll(this);
     }
 

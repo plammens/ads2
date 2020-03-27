@@ -2,15 +2,24 @@ package guid2475444L.ads2.ae2;
 
 import java.util.Collection;
 
+import org.jetbrains.annotations.NotNull;
+
 
 /**
  * Defines the dynamic set ADT.
  * <p>
  * The Dynamic Set is an abstract data type (ADT) that can store distinct elements, without any
- * particular order.
+ * particular order. The elements must implement {@link Comparable} nevertheless so that certain
+ * implementations can be possible.
+ * <p>
+ * Note: this interface extends {@link Collection} just because it defines useful methods and so
+ * that implementing objects can be passed to functions with a Collection as parameter, but all the
+ * relevant operations have been redefined here in {@link DynamicSet}.
+ * <p>
  * @param <E> type of the elements stored in this set
+ * @author - Paolo Lammens (2475444L)
  */
-public interface DynamicSet<E> extends Collection<E> {
+public interface DynamicSet<E extends Comparable<E>> extends Collection<E> {
 
     /**
      * Add an element to this set, if not present already.
@@ -42,7 +51,7 @@ public interface DynamicSet<E> extends Collection<E> {
     int size();
 
     /** @return whether this set is empty */
-    default boolean empty() {
+    default boolean isEmpty() {
         return size() == 0;
     }
 
@@ -51,30 +60,31 @@ public interface DynamicSet<E> extends Collection<E> {
      * @param other set to unite with {@code this}
      * @return a new set consisting of the union of {@code this} and {@code other}
      */
-    DynamicSet<E> union(DynamicSet<? extends E> other);
+    DynamicSet<E> union(@NotNull DynamicSet<? extends E> other);
 
     /**
      * Set intersection: elements that are in both {@code this} and {@code other}
      * @param other set to intersect with {@code this}
      * @return a new set consisting of the intersection of {@code this} and {@code other}
      */
-    DynamicSet<E> intersect(DynamicSet<? extends E> other);
+    DynamicSet<E> intersect(@NotNull DynamicSet<? extends E> other);
 
     /**
      * Set difference: elements that are in {@code this} that are not in {@code other}
      * @param other set to unite with {@code this}
      * @return a new set consisting of the difference {@code this} minus {@code other}
      */
-    DynamicSet<E> minus(DynamicSet<? extends E> other);
+    DynamicSet<E> minus(@NotNull DynamicSet<? extends E> other);
 
     /** @return whether {@code this} is a subset of {@code other} */
-    boolean isSubsetOf(DynamicSet<?> other);
+    boolean isSubsetOf(@NotNull DynamicSet<?> other);
 
     /**
      * Alternative to {@code a.union(b)}
      * @see #union(DynamicSet)
      */
-    static <U> DynamicSet<U> union(DynamicSet<? extends U> a, DynamicSet<? extends U> b) {
+    static <U extends Comparable<U>> DynamicSet<U> union(@NotNull DynamicSet<? extends U> a,
+                                                         @NotNull DynamicSet<? extends U> b) {
         //noinspection unchecked
         return ((DynamicSet<U>) a).union(b);
     }
@@ -83,7 +93,8 @@ public interface DynamicSet<E> extends Collection<E> {
      * Alternative to {@code a.intersect(b)}
      * @see #intersect
      */
-    static <U> DynamicSet<U> intersection(DynamicSet<? extends U> a, DynamicSet<? extends U> b) {
+    static <U extends Comparable<U>> DynamicSet<U> intersection(@NotNull DynamicSet<? extends U> a,
+                                                                @NotNull DynamicSet<? extends U> b) {
         //noinspection unchecked
         return ((DynamicSet<U>) a).intersect(b);
     }
@@ -92,7 +103,8 @@ public interface DynamicSet<E> extends Collection<E> {
      * Alternative to {@code a.minus(b)}
      * @see #minus
      */
-    static <U> DynamicSet<U> difference(DynamicSet<? extends U> a, DynamicSet<? extends U> b) {
+    static <U extends Comparable<U>> DynamicSet<U> difference(@NotNull DynamicSet<? extends U> a,
+                                                              @NotNull DynamicSet<? extends U> b) {
         //noinspection unchecked
         return ((DynamicSet<U>) a).minus(b);
     }
