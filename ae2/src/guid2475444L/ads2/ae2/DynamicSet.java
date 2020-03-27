@@ -82,6 +82,29 @@ public interface DynamicSet<E extends Comparable<E>> extends Collection<E> {
     boolean isSubsetOf(@NotNull DynamicSet<?> other);
 
     /**
+     * Compares the specified object with this set for equality.  Returns {@code true} if the
+     * specified object is also a set, the two sets have the same size, and every member of the
+     * specified set is contained in this set (or equivalently, every member of this set is
+     * contained in the specified set).  This definition ensures that the equals method works
+     * properly across different implementations of the set interface.
+     * @param obj object to be compared for equality with this set
+     * @return {@code true} if the specified object is equal to this set
+     */
+    @Override
+    boolean equals(Object obj);
+
+    /**
+     * Returns the hash code value for this set.  The hash code of a set is defined to be the sum of
+     * the hash codes of the elements in the set, where the hash code of a {@code null} element is
+     * defined to be zero. This ensures that {@code s1.equals(s2)} implies that {@code
+     * s1.hashCode()==s2.hashCode()} for any two sets {@code s1} and {@code s2}, as required by the
+     * general contract of {@link Object#hashCode}.
+     * @return the hash code value for this set
+     * @see DynamicSet#equals(Object)
+     */
+    int hashCode();
+
+    /**
      * Alternative to {@code a.union(b)}
      * @see #union(DynamicSet)
      */

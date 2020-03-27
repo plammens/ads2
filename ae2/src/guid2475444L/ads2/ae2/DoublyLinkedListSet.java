@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
  * {@link DynamicSet} implementation using a {@link DoublyLinkedList} as the backing container
  * @author - Paolo Lammens (2475444L)
  */
-public class DoublyLinkedListSet<E extends Comparable<E>> implements DynamicSet<E> {
+public class DoublyLinkedListSet<E extends Comparable<E>> extends AbstractDynamicSet<E> {
 
     private DoublyLinkedList<E> list = new DoublyLinkedList<>();
 
