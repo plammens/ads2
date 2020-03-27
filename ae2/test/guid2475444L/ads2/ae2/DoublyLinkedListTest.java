@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 
+@SuppressWarnings({"ConstantConditions", "SuspiciousMethodCalls"})
 class DoublyLinkedListTest {
 
     final static List<Integer> INIT_LIST = Arrays.asList(1, 1, 2, 3, null, 5, 6, 7, 8, 9);
@@ -178,6 +179,7 @@ class DoublyLinkedListTest {
         assertPropertiesHaveNotChanged();
     }
 
+    @SuppressWarnings({"SimplifiableJUnitAssertion", "EqualsWithItself"})
     @Test
     void testEquals() {
         assertTrue(list.equals(list));
