@@ -6,8 +6,12 @@ import org.jetbrains.annotations.NotNull;
 class DoublyLinkedListSetTest extends DynamicSetTest {
 
     @Override
-    @NotNull
-    protected DynamicSet<Integer> constructSet() {
+    protected @NotNull DoublyLinkedListSet<Integer> getTestSubject() {
+        return (DoublyLinkedListSet<Integer>) testSubject;
+    }
+
+    @Override
+    protected @NotNull DynamicSet<Integer> constructSubject() {
         return new DoublyLinkedListSet<>();
     }
 
