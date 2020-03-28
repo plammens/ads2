@@ -37,7 +37,7 @@ public abstract class DynamicSetTest extends CollectionTest {
 
     @Override
     @Test
-    void add() {
+    void add_Element_UpdatesCorrectly() {
         for (Integer elem : INIT_LIST) assertFalse(testSubject.add(elem));
         assertPropertiesHaveNotChanged();
 
@@ -49,7 +49,7 @@ public abstract class DynamicSetTest extends CollectionTest {
     @Override
     @Test
     @SuppressWarnings("SuspiciousMethodCalls")
-    void remove() {
+    void remove_Object_UpdatesCorrectly() {
         for (Object elem : NON_MEMBERS_SAMPLE) assertFalse(testSubject.remove(elem));
         assertPropertiesHaveNotChanged();
 
@@ -110,37 +110,6 @@ public abstract class DynamicSetTest extends CollectionTest {
                 b = constructSubject(List.of(2, 1, 3, 5, 8, 7));
         assertTrue(a.isSubsetOf(b));
         assertFalse(b.isSubsetOf(a));
-    }
-
-    @Override
-    @Test
-    void containsAll() {
-    }
-
-    @Override
-    @Test
-    void addAll() {
-    }
-
-    @Override
-    @Test
-    void removeAll() {
-    }
-
-    @Override
-    @Test
-    void retainAll() {
-    }
-
-    @Override
-    @Test
-    void iterator() {
-    }
-
-    @Override
-    @Test
-    void toArray() {
-
     }
 
     @Override

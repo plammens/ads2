@@ -43,7 +43,7 @@ class DoublyLinkedListTest extends CollectionTest {
 
     @Override
     @Test
-    void add() {
+    void add_Element_UpdatesCorrectly() {
         assertTrue(getTestSubject().add(42));
         assertEquals(INIT_SIZE + 1, getTestSubject().size());
         assertEquals(42, getTestSubject().get(INIT_SIZE));
@@ -51,7 +51,7 @@ class DoublyLinkedListTest extends CollectionTest {
     }
 
     @Test
-    void add_index() {
+    void add_IndexAndElement_UpdatesCorrectly() {
         assertThrows(IndexOutOfBoundsException.class, () -> getTestSubject().add(-1, 0));
         assertThrows(IndexOutOfBoundsException.class, () -> getTestSubject().add(INIT_SIZE, 0));
         assertPropertiesHaveNotChanged();
@@ -63,7 +63,7 @@ class DoublyLinkedListTest extends CollectionTest {
 
     @Override
     @Test
-    void remove() {
+    void remove_Object_UpdatesCorrectly() {
         assertFalse(getTestSubject().remove(Integer.valueOf(10)));
         assertPropertiesHaveNotChanged();
 
@@ -73,7 +73,7 @@ class DoublyLinkedListTest extends CollectionTest {
     }
 
     @Test
-    void remove_index() {
+    void remove_Index_UpdatesCorrectly() {
         assertThrows(IndexOutOfBoundsException.class, () -> getTestSubject().remove(-1));
         assertThrows(IndexOutOfBoundsException.class, () -> getTestSubject().remove(INIT_SIZE));
         assertPropertiesHaveNotChanged();
@@ -84,17 +84,8 @@ class DoublyLinkedListTest extends CollectionTest {
         assertNull(getTestSubject().remove(4));
     }
 
-    @Override
     @Test
-    void containsAll() {
-        assertTrue(getTestSubject().containsAll(INIT_LIST));
-        assertTrue(getTestSubject().containsAll(List.of(3, 7)));
-        assertFalse(getTestSubject().containsAll(List.of(1, 10)));
-    }
-
-    @Override
-    @Test
-    void addAll() {
+    void addAll_SequenceWithDuplicates_AddsAllInOrder() {
         assertTrue(getTestSubject().addAll(INIT_LIST));
         assertEquals(2 * INIT_SIZE, getTestSubject().size());
         assertEquals(1, getTestSubject().get(INIT_SIZE));
@@ -110,31 +101,8 @@ class DoublyLinkedListTest extends CollectionTest {
 
     @Override
     @Test
-    void removeAll() {
-        assertFalse(getTestSubject().removeAll(List.of(42, 11, 32)));
-        assertPropertiesHaveNotChanged();
-
-        assertTrue(getTestSubject().removeAll(List.of(1, 7)));
-        assertEquals(INIT_SIZE - 3, getTestSubject().size());
-        assertTrue(getTestSubject().removeAll(INIT_LIST));
-        assertEquals(0, getTestSubject().size());
-        assertTrue(getTestSubject().isEmpty());
-    }
-
-    @Override
-    @Test
-    void retainAll() {
-        assertFalse(getTestSubject().retainAll(INIT_LIST));
-        assertPropertiesHaveNotChanged();
-
-        assertTrue(getTestSubject().retainAll(List.of(1, 7)));
-        assertEquals(3, getTestSubject().size());
-        assertTrue(getTestSubject().containsAll(List.of(1, 7)));
-    }
-
-    @Override
-    @Test
     void iterator() {
+        assertArrayEquals(INIT_LIST.toArray(), testSubject.toArray());
     }
 
     @Test
@@ -171,13 +139,20 @@ class DoublyLinkedListTest extends CollectionTest {
     }
 
     @Test
-    void subList() {
+    void subList_InvalidRange_ThrowsException() {
         assertThrows(IndexOutOfBoundsException.class, () -> getTestSubject().subList(-1, -1));
+        assertPropertiesHaveNotChanged();
+    }
+
+    @Test
+    void subList_ValidRange_ReturnsCorrespondingList() {
         assertEquals(getTestSubject(), getTestSubject().subList(0, INIT_SIZE));
         assertEquals(List.of(), getTestSubject().subList(5, 5));
         assertEquals(List.of(1, 2, 3), getTestSubject().subList(1, 4));
-        assertPropertiesHaveNotChanged();
+    }
 
+    @Test
+    void subList_Modified_ParentListGetsModified() {
         List<Integer> subList = getTestSubject().subList(1, 6);
         subList.clear();
         assertEquals(List.of(1, 6, 7, 8, 9), getTestSubject());
@@ -202,21 +177,6 @@ class DoublyLinkedListTest extends CollectionTest {
     @Test
     void testToString() {
         assertEquals("< 1 ⇄ 1 ⇄ 2 ⇄ 3 ⇄ null ⇄ 5 ⇄ 6 ⇄ 7 ⇄ 8 ⇄ 9 >", getTestSubject().toString());
-    }
-
-    @Override
-    @Test
-    void toArray() {
-        assertArrayEquals(INIT_LIST.toArray(), getTestSubject().toArray());
-        Integer[] oversized = new Integer[INIT_SIZE + 3];
-        assertArrayEquals(INIT_LIST.toArray(oversized), getTestSubject().toArray(oversized));
-    }
-
-    @Override
-    void assertPropertiesHaveNotChanged() {
-        super.assertPropertiesHaveNotChanged();
-        assertEquals(1, getTestSubject().getFirst());
-        assertEquals(9, getTestSubject().getLast());
     }
 
 }

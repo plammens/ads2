@@ -2,15 +2,18 @@ package guid2475444L.ads2.ae2;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 
-@SuppressWarnings("ConstantConditions")
+@SuppressWarnings({"ConstantConditions", "SuspiciousMethodCalls",
+        "RedundantOperationOnEmptyContainer"})
 public abstract class CollectionTest {
 
     // --------------- Config ---------------
@@ -56,56 +59,122 @@ public abstract class CollectionTest {
 
     // --------------- Tests ---------------
 
-    @SuppressWarnings("SuspiciousMethodCalls")
     @Test
-    void contains() {
-        for (Integer elem : INIT_LIST) assertTrue(testSubject.contains(elem));
-        for (Object elem : NON_MEMBERS_SAMPLE) assertFalse(testSubject.contains(elem));
+    final void contains_InitElements_ReturnsTrue() {
+        assertAll(INIT_LIST.stream().map((x) -> () -> assertTrue(testSubject.contains(x))));
         assertPropertiesHaveNotChanged();
     }
 
     @Test
-    void size() {
-        assertEquals(INIT_SIZE, testSubject.size());
+    @SuppressWarnings("SuspiciousMethodCalls")
+    final void contains_NonMembers_ReturnsFalse() {
+        assertAll(NON_MEMBERS_SAMPLE.stream().map((x) -> () -> assertFalse(testSubject.contains(x))));
+        assertPropertiesHaveNotChanged();
     }
 
     @Test
-    void isEmpty() {
+    final void size_Init_CorrectSize() {
+        assertEquals(INIT_SIZE, testSubject.size());
+        assertPropertiesHaveNotChanged();
+    }
+
+    @Test
+    final void isEmpty_Full_ReturnsFalse() {
         assertFalse(testSubject.isEmpty());
+        assertPropertiesHaveNotChanged();
+    }
+
+    @Test
+    final void isEmpty_AfterClear_ReturnsTrue() {
         testSubject.clear();
         assertTrue(testSubject.isEmpty());
     }
 
     @Test
-    void clear() {
+    final void clear_Full_IsEmpty() {
         testSubject.clear();
         assertEquals(0, testSubject.size());
         assertTrue(testSubject.isEmpty());
+        assertFalse(testSubject.iterator().hasNext());
     }
 
     @Test
-    abstract void add();
+    abstract void add_Element_UpdatesCorrectly();
 
     @Test
-    abstract void remove();
+    abstract void remove_Object_UpdatesCorrectly();
 
     @Test
-    abstract void containsAll();
+    final void containsAll() {
+        assertTrue(testSubject.containsAll(INIT_LIST));
+        assertFalse(testSubject.containsAll(NON_MEMBERS_SAMPLE));
+        assertFalse(testSubject.containsAll(Utils.concat(INIT_LIST, NON_MEMBERS_SAMPLE)));
+    }
 
     @Test
-    abstract void addAll();
+    final void addAll_DistinctNonMembers_AllGetAdded() {
+        List<Integer> toAdd = NON_MEMBERS_SAMPLE.stream().filter(Integer.class::isInstance)
+                                                .map(Integer.class::cast).distinct()
+                                                .collect(Collectors.toList());
+        assertTrue(testSubject.addAll(toAdd));
+        assertTrue(testSubject.containsAll(toAdd));
+        assertEquals(INIT_SIZE + toAdd.size(), testSubject.size());
+    }
 
     @Test
-    abstract void removeAll();
+    final void removeAll_NonMembers_DoesNotChange() {
+        assertFalse(testSubject.removeAll(NON_MEMBERS_SAMPLE));
+        assertPropertiesHaveNotChanged();
+    }
 
     @Test
-    abstract void retainAll();
+    final void removeAll_ElementSequence_NoneIsElementAnymore() {
+        List<Integer> toRemove =
+                INIT_LIST.stream().limit(INIT_SIZE / 2).collect(Collectors.toList());
+        assertTrue(testSubject.removeAll(toRemove));
+        assertTrue(toRemove.stream().noneMatch(testSubject::contains));
+    }
+
+    @Test
+    final void removeAll_InitElements_IsEmpty() {
+        assertTrue(testSubject.removeAll(INIT_LIST));
+        assertTrue(testSubject.isEmpty());
+    }
+
+    @Test
+    final void retainAll_InitElements_DoesNotChange() {
+        assertFalse(testSubject.retainAll(INIT_LIST));
+        assertPropertiesHaveNotChanged();
+    }
 
     @Test
     abstract void iterator();
 
     @Test
-    abstract void toArray();
+    final void toArray_NoArgs_ArrayHasEquivalentProperties() {
+        Object[] arr = testSubject.toArray();
+        assertEquals(INIT_SIZE, arr.length);
+        assertTrue(Arrays.asList(arr).containsAll(testSubject));
+        assertPropertiesHaveNotChanged();
+    }
+
+    @Test
+    final void toArray_Oversized_ElementFollowingLastIsNull() {
+        Integer[] oversized = new Integer[INIT_SIZE + 2];
+        testSubject.toArray(oversized);
+        assertNull(oversized[INIT_SIZE]);
+        assertPropertiesHaveNotChanged();
+    }
+
+    @Test
+    final void toArray_EmptySupertypeArray_FillsNewArrayWithGivenType() {
+        Number[] arrArg = new Number[0];
+        Object[] returnedArr = testSubject.toArray(arrArg);
+        assertEquals(Number.class, returnedArr.getClass().getComponentType());
+        assertEquals(testSubject.size(), returnedArr.length);
+        assertTrue(Arrays.asList(returnedArr).containsAll(testSubject));
+        assertPropertiesHaveNotChanged();
+    }
 
     @Test
     abstract void testEquals();
