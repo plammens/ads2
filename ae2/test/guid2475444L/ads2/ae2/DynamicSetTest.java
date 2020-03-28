@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
@@ -28,7 +29,7 @@ public abstract class DynamicSetTest extends CollectionTest {
 
     DynamicSetTest() {
         super(List.of(1, 3, 3, 2, 4, 7, 6, 5, 9, 0, 8),  // init list
-              List.of(-1, 11, 13, 42),  // non-members sample
+              List.of(-1, 11, new Object(), 13, 42),  // non-members sample
               10);  // init size
     }
 
@@ -38,19 +39,22 @@ public abstract class DynamicSetTest extends CollectionTest {
     @Override
     @Test
     void add_Element_UpdatesCorrectly() {
-        for (Integer elem : INIT_LIST) assertFalse(testSubject.add(elem));
+        assertAll(INIT_LIST.stream().map((x) -> () -> assertFalse(testSubject.add(x))));
         assertPropertiesHaveNotChanged();
 
-        for (Object elem : NON_MEMBERS_SAMPLE)
+        List<Integer> toAdd =
+                NON_MEMBERS_SAMPLE.stream().filter(Integer.class::isInstance)
+                                  .map(Integer.class::cast).collect(Collectors.toList());
+        for (Object elem : toAdd)
             if (elem instanceof Integer) assertTrue(testSubject.add((Integer) elem));
-        assertEquals(INIT_SIZE + NON_MEMBERS_SAMPLE.size(), testSubject.size());
+        assertEquals(INIT_SIZE + toAdd.size(), testSubject.size());
     }
 
     @Override
     @Test
     @SuppressWarnings("SuspiciousMethodCalls")
     void remove_Object_UpdatesCorrectly() {
-        for (Object elem : NON_MEMBERS_SAMPLE) assertFalse(testSubject.remove(elem));
+        assertAll(NON_MEMBERS_SAMPLE.stream().map((x) -> () -> assertFalse(testSubject.remove(x))));
         assertPropertiesHaveNotChanged();
 
         assertTrue(testSubject.remove(0));
