@@ -10,23 +10,7 @@ import org.junit.jupiter.api.Test;
 
 
 class DoublyLinkedListTest extends CollectionTest {
-
     // --------------- Config ---------------
-
-    @Override
-    protected List<Integer> getInitList() {
-        return Arrays.asList(1, 1, 2, 3, null, 5, 6, 7, 8, 9);
-    }
-
-    @Override
-    protected List<Object> getNonMembersSample() {
-        return List.of(-1, 12, 42, 4, new Object());
-    }
-
-    @Override
-    protected int getInitSize() {
-        return 10;
-    }
 
     @Override
     protected @NotNull DoublyLinkedList<Integer> constructSubject() {
@@ -34,8 +18,14 @@ class DoublyLinkedListTest extends CollectionTest {
     }
 
     @Override
-    protected DoublyLinkedList<Integer> getTestSubject() {
+    protected @NotNull DoublyLinkedList<Integer> getTestSubject() {
         return (DoublyLinkedList<Integer>) testSubject;
+    }
+
+    DoublyLinkedListTest() {
+        super(Arrays.asList(1, 1, 2, 3, null, 5, 6, 7, 8, 9),  // init list
+              List.of(-1, 12, 42, 4, new Object()),  // non-members sample
+              10);  // init size
     }
 
 

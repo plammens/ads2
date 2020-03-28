@@ -16,21 +16,6 @@ public abstract class DynamicSetTest extends CollectionTest {
     // --------------- Config ---------------
 
     @Override
-    protected List<Integer> getInitList() {
-        return List.of(1, 3, 3, 2, 4, 7, 6, 5, 9, 0, 8);
-    }
-
-    @Override
-    protected List<Object> getNonMembersSample() {
-        return List.of(-1, 11, 13, 42);
-    }
-
-    @Override
-    protected int getInitSize() {
-        return 10;
-    }
-
-    @Override
     protected abstract @NotNull DynamicSet<Integer> constructSubject();
 
     @Override
@@ -40,6 +25,12 @@ public abstract class DynamicSetTest extends CollectionTest {
 
     @Override
     protected abstract @NotNull DynamicSet<Integer> getTestSubject();
+
+    DynamicSetTest() {
+        super(List.of(1, 3, 3, 2, 4, 7, 6, 5, 9, 0, 8),  // init list
+              List.of(-1, 11, 13, 42),  // non-members sample
+              10);  // init size
+    }
 
 
     // --------------- Tests ---------------

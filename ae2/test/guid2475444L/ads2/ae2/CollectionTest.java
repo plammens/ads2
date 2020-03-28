@@ -15,23 +15,25 @@ public abstract class CollectionTest {
 
     // --------------- Config ---------------
 
-    protected final List<Integer> INIT_LIST = getInitList();
-    protected final List<Object> NON_MEMBERS_SAMPLE = getNonMembersSample();
-    protected final int INIT_SIZE = getInitSize();
+    protected final List<Integer> INIT_LIST;
+    protected final List<Object> NON_MEMBERS_SAMPLE;
+    protected final int INIT_SIZE;
     protected Collection<Integer> testSubject;
 
-    /** factory for the initializer list to fill the test subject with */
-    protected abstract List<Integer> getInitList();
-
     /**
-     * @return factory for a sample of elements that are not supposed to be in the tested collection
-     *         after initialisation with {@code constructSubject(getInitList())}
-     * @see #getInitList()
+     * Configure a test suite for a {@link Collection} subclass
+     * @param initList         initializer list to fill the test subject with
+     * @param nonMembersSample a sample of elements that are not supposed to be in the tested
+     *                         collection after initialisation with {@code constructSubject
+     *                         (getInitList())}
+     * @param initSize         the initial size that the tested collection instance is supposed to
+     *                         have after initialisation
      */
-    protected abstract List<Object> getNonMembersSample();
-
-    /** get the initial size that the test subject is supposed to have after initialisation */
-    protected abstract int getInitSize();
+    public CollectionTest(List<Integer> initList, List<Object> nonMembersSample, int initSize) {
+        this.INIT_LIST = initList;
+        this.NON_MEMBERS_SAMPLE = nonMembersSample;
+        this.INIT_SIZE = initSize;
+    }
 
     /** @return an empty instance of the collection class to be tested */
     protected abstract @NotNull Collection<Integer> constructSubject();
@@ -43,8 +45,8 @@ public abstract class CollectionTest {
         return testSubject;
     }
 
-    /** @return the test subject of this test (an instance of a {@link Collection} subclass) */
-    protected abstract Collection<Integer> getTestSubject();
+    /** @return the test subject of this test suite */
+    protected abstract @NotNull Collection<Integer> getTestSubject();
 
     @BeforeEach
     void setUp() {
