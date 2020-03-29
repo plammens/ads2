@@ -236,12 +236,14 @@ public class BinarySearchTree<E extends Comparable<E>> implements DynamicSet<E> 
      * @param node node to remove
      */
     private void remove(Node<E> node) {
-        if (node.isLeaf()) replace(node, null);
+        if (node.isLeaf()) unlink(node);
         else if (node.right == null) replace(node, node.left);
         else if (node.left == null) replace(node, node.right);
         else {
-            InorderTraversal iter = new InorderTraversal(node.right);
-            replace(node, iter.nextNode());
+            // "bubble up" the value of the inorder successor of node:
+            Node<E> successor = new InorderTraversal(node.right).nextNode();
+            node.value = successor.value;  // overwrite value with successor value
+            unlink(successor);  // remove the copy at the leaf
         }
         --size;
     }
