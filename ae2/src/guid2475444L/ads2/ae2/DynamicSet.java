@@ -27,12 +27,14 @@ public interface DynamicSet<E extends Comparable<E>> extends Collection<E> {
      * Add an element to this set, if not present already.
      * @param x value of the element to be added
      */
+    @Override
     boolean add(E x);
 
     /**
      * Remove an element from this set, if present.
      * @param x value of the element to be removed
      */
+    @Override
     boolean remove(Object x);
 
     /**
@@ -44,15 +46,19 @@ public interface DynamicSet<E extends Comparable<E>> extends Collection<E> {
      * we want to test which of them are in this set. Restricting the type of the parameter to
      * {@code T} would not allow that.
      * <p>
+     * Returns {@code false} if {@code x} is {@code null} or of an incompatible type.
      * @param x object whose membership in this set is to be tested
      * @return whether {@code x} is an element of {@code this}
      */
+    @Override
     boolean contains(Object x);
 
     /** @return the number of elements in this set */
+    @Override
     int size();
 
     /** @return whether this set is empty */
+    @Override
     default boolean isEmpty() {
         return size() == 0;
     }
