@@ -27,7 +27,7 @@ public abstract class CollectionTest {
      * Configure a test suite for a {@link Collection} subclass
      * @param initList         initializer list to fill the test subject with
      * @param nonMembersSample a sample of elements that are not supposed to be in the tested
-     *                         collection after initialisation with {@code constructSubject
+     *                         collection after initialisation with {@code constructTestSubject
      *                         (getInitList())}
      * @param initSize         the initial size that the tested collection instance is supposed to
      *                         have after initialisation
@@ -39,11 +39,11 @@ public abstract class CollectionTest {
     }
 
     /** @return an empty instance of the collection class to be tested */
-    protected abstract @NotNull Collection<Integer> constructSubject();
+    protected abstract @NotNull Collection<Integer> constructTestSubject();
 
     /** @return an instance of the class to be tested filled with elements from a collection */
-    protected @NotNull Collection<Integer> constructSubject(Collection<Integer> initializer) {
-        Collection<Integer> testSubject = constructSubject();
+    protected @NotNull Collection<Integer> constructTestSubject(Collection<Integer> initializer) {
+        Collection<Integer> testSubject = constructTestSubject();
         testSubject.addAll(initializer);
         return testSubject;
     }
@@ -53,7 +53,7 @@ public abstract class CollectionTest {
 
     @BeforeEach
     void setUp() {
-        testSubject = constructSubject(INIT_LIST);
+        testSubject = constructTestSubject(INIT_LIST);
     }
 
 

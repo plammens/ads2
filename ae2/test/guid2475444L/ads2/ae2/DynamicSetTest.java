@@ -17,11 +17,11 @@ public abstract class DynamicSetTest extends CollectionTest {
     // --------------- Config ---------------
 
     @Override
-    protected abstract @NotNull DynamicSet<Integer> constructSubject();
+    protected abstract @NotNull DynamicSet<Integer> constructTestSubject();
 
     @Override
-    protected @NotNull DynamicSet<Integer> constructSubject(Collection<Integer> initializer) {
-        return (DynamicSet<Integer>) super.constructSubject(initializer);
+    protected @NotNull DynamicSet<Integer> constructTestSubject(Collection<Integer> initializer) {
+        return (DynamicSet<Integer>) super.constructTestSubject(initializer);
     }
 
     @Override
@@ -72,17 +72,17 @@ public abstract class DynamicSetTest extends CollectionTest {
 
         List<Integer> copy = new ArrayList<>(INIT_LIST);
         Collections.reverse(copy);
-        DynamicSet<Integer> a = constructSubject(INIT_LIST), b = constructSubject(copy);
+        DynamicSet<Integer> a = constructTestSubject(INIT_LIST), b = constructTestSubject(copy);
         assertTrue(a.equals(b));
-        assertTrue(constructSubject().equals(constructSubject()));
+        assertTrue(constructTestSubject().equals(constructTestSubject()));
     }
 
     @Test
     void union() {
         DynamicSet<Integer>
-                a = constructSubject(List.of(1, 7, 3, 5, 1)),
-                b = constructSubject(List.of(2, 1, 4, 7)),
-                union = constructSubject(List.of(1, 2, 3, 4, 5, 7));
+                a = constructTestSubject(List.of(1, 7, 3, 5, 1)),
+                b = constructTestSubject(List.of(2, 1, 4, 7)),
+                union = constructTestSubject(List.of(1, 2, 3, 4, 5, 7));
         assertEquals(union, a.union(b));
         assertEquals(union, DynamicSet.union(a, b));
     }
@@ -90,9 +90,9 @@ public abstract class DynamicSetTest extends CollectionTest {
     @Test
     void intersect() {
         DynamicSet<Integer>
-                a = constructSubject(List.of(1, 7, 3, 5, 1)),
-                b = constructSubject(List.of(2, 1, 5, 4, 7, 8)),
-                intersection = constructSubject(List.of(1, 5, 7));
+                a = constructTestSubject(List.of(1, 7, 3, 5, 1)),
+                b = constructTestSubject(List.of(2, 1, 5, 4, 7, 8)),
+                intersection = constructTestSubject(List.of(1, 5, 7));
         assertEquals(intersection, a.intersect(b));
         assertEquals(intersection, DynamicSet.intersection(a, b));
     }
@@ -100,9 +100,9 @@ public abstract class DynamicSetTest extends CollectionTest {
     @Test
     void difference() {
         DynamicSet<Integer>
-                a = constructSubject(List.of(1, 7, 2, 3, 5, 1)),
-                b = constructSubject(List.of(1, 5, 4, 7, 8)),
-                difference = constructSubject(List.of(2, 3));
+                a = constructTestSubject(List.of(1, 7, 2, 3, 5, 1)),
+                b = constructTestSubject(List.of(1, 5, 4, 7, 8)),
+                difference = constructTestSubject(List.of(2, 3));
         assertEquals(difference, a.minus(b));
         assertEquals(difference, DynamicSet.difference(a, b));
     }
@@ -110,8 +110,8 @@ public abstract class DynamicSetTest extends CollectionTest {
     @Test
     void isSubsetOf() {
         DynamicSet<Integer>
-                a = constructSubject(List.of(1, 7, 3, 5)),
-                b = constructSubject(List.of(2, 1, 3, 5, 8, 7));
+                a = constructTestSubject(List.of(1, 7, 3, 5)),
+                b = constructTestSubject(List.of(2, 1, 3, 5, 8, 7));
         assertTrue(a.isSubsetOf(b));
         assertFalse(b.isSubsetOf(a));
     }

@@ -16,7 +16,7 @@ class DoublyLinkedListSetTest extends DynamicSetTest {
     }
 
     @Override
-    protected @NotNull DynamicSet<Integer> constructSubject() {
+    protected @NotNull DynamicSet<Integer> constructTestSubject() {
         return new DoublyLinkedListSet<>();
     }
 

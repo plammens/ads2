@@ -13,7 +13,7 @@ class DoublyLinkedListTest extends CollectionTest {
     // --------------- Config ---------------
 
     @Override
-    protected @NotNull DoublyLinkedList<Integer> constructSubject() {
+    protected @NotNull DoublyLinkedList<Integer> constructTestSubject() {
         return new DoublyLinkedList<>();
     }
 
