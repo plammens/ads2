@@ -2,7 +2,6 @@ package guid2475444L.ads2.ae2;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -57,10 +56,10 @@ public abstract class DynamicSetTest extends CollectionTest {
         assertAll(NON_MEMBERS_SAMPLE.stream().map((x) -> () -> assertFalse(testSubject.remove(x))));
         assertPropertiesHaveNotChanged();
 
-        assertTrue(testSubject.remove(0));
-        assertTrue(testSubject.remove(3));
-        assertFalse(testSubject.remove(3));
-        assertEquals(INIT_SIZE - 2, testSubject.size());
+        List<Integer> toRemove = List.of(0, 1, 7, 9);
+        for (Integer x : toRemove) assertTrue(getTestSubject().remove(x));
+        assertEquals(INIT_SIZE - toRemove.size(), getTestSubject().size());
+        for (Integer x : toRemove) assertFalse(getTestSubject().remove(x));
     }
 
     @Override
@@ -70,7 +69,7 @@ public abstract class DynamicSetTest extends CollectionTest {
         assertTrue(testSubject.equals(testSubject));
         assertFalse(testSubject.equals(INIT_LIST));
 
-        List<Integer> copy = new ArrayList<>(INIT_LIST);
+        List<Integer> copy = INIT_LIST.stream().distinct().collect(Collectors.toList());
         Collections.reverse(copy);
         DynamicSet<Integer> a = constructTestSubject(INIT_LIST), b = constructTestSubject(copy);
         assertTrue(a.equals(b));
