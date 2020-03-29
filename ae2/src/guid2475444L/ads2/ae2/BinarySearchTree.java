@@ -247,6 +247,28 @@ public class BinarySearchTree<E extends Comparable<E>> implements DynamicSet<E> 
     }
 
     /**
+     * Append a tree to this one.
+     * <p>
+     * If present—that is, if {@code leaf} is not a leaf—, the subtree previously occupying the
+     * specified position becomes unreachable since all references to it are lost—so, essentially,
+     * it gets deleted.
+     * <p>
+     * <b>Precondition:</b> {@code tree} is the root of a (proper) tree—that is, {@code tree.parent
+     * == null}—and it is not referenced in any other {@link BinarySearchTree} object.
+     * @param leaf  node to which {@code tree} is to be anchored. If {@code null}, the whole tree
+     *              represented by {@code this} gets replaced by {@code tree} ({@code tree} gets set
+     *              as the {@link #root})
+     * @param where which side of the {@code node}  to link on (right or left)
+     * @param tree  root of the tree to be appended
+     */
+    private void link(@Nullable Node<E> leaf, Node.ChildType where, @Nullable Node<E> tree) {
+        if (leaf == null) root = tree;
+        else if (where == Node.ChildType.LEFT) leaf.left = tree;
+        else if (where == Node.ChildType.RIGHT) leaf.right = tree;
+        if (tree != null) tree.parent = leaf;
+    }
+
+    /**
      * Replace a subtree with another
      * <p>
      * Does not update {@link #size} (responsibility of the caller)
@@ -255,10 +277,7 @@ public class BinarySearchTree<E extends Comparable<E>> implements DynamicSet<E> 
      */
     private void replace(@NotNull Node<E> subtree, @Nullable Node<E> replacement) {
         if (replacement != null) unlink(replacement);
-        Node.ChildType childType = subtree.getChildType();
-        if (childType == Node.ChildType.LEFT) subtree.parent.left = null;
-        else if (childType == Node.ChildType.RIGHT) subtree.parent.right = null;
-        else root = replacement;
+        link(subtree.parent, subtree.getChildType(), replacement);
     }
 
     /**
@@ -268,10 +287,7 @@ public class BinarySearchTree<E extends Comparable<E>> implements DynamicSet<E> 
      * @param subtree root node of the subtree to be unlinked
      */
     private void unlink(@NotNull Node<E> subtree) {
-        Node.ChildType childType = subtree.getChildType();
-        if (childType == Node.ChildType.LEFT) subtree.parent.left = null;
-        else if (childType == Node.ChildType.RIGHT) subtree.parent.right = null;
-        subtree.parent = null;
+        replace(subtree, null);
     }
 
 
