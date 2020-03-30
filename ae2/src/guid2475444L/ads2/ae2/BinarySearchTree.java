@@ -3,6 +3,7 @@ package guid2475444L.ads2.ae2;
 
 import java.lang.reflect.Array;
 import java.util.*;
+import java.util.function.BiFunction;
 
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -18,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
  * relevant operations have been redefined here in {@link DynamicSet}.
  * @author - Paolo Lammens (2475444L)
  */
-public class BinarySearchTree<E extends Comparable<E>> implements DynamicSet<E> {
+public class BinarySearchTree<E extends Comparable<E>> extends AbstractDynamicSet<E> {
 
     private static class Node<E> {
         enum ChildType {LEFT, RIGHT, ORPHAN}
@@ -55,8 +56,69 @@ public class BinarySearchTree<E extends Comparable<E>> implements DynamicSet<E> 
         }
     }
 
-    private int size = 0;
+    /**
+     * Construct a perfectly balanced Binary Search Tree from a sorted list of elements
+     * @param sorted sorted list of elements to populate the tree with
+     * @param <E>    type of elements
+     * @return the root {@link Node} of a new perfectly balanced Binary Search Tree filled with the
+     *         elements from {@code sorted}
+     */
+    private static <E extends Comparable<E>> Node<E> balancedBstFromSortedList(List<E> sorted) {
+        int n = sorted.size(), mid = n / 2;
+        if (n == 0) return null;
+        Node<E> left = balancedBstFromSortedList(sorted.subList(0, mid)),
+                right = balancedBstFromSortedList(sorted.subList(mid + 1, n)),
+                root = new Node<>(sorted.get(mid), null, left, right);
+        if (left != null) left.parent = root;
+        if (right != null) right.parent = root;
+        return root;
+    }
+
+    private int size;
     private Node<E> root;
+
+    /** Wrap the root of a constructed tree with a {@link BinarySearchTree} object (internal use) */
+    private BinarySearchTree(Node<E> root, int size) {
+        this.root = root;
+        this.size = size;
+    }
+
+    public BinarySearchTree() {
+        this(null, 0);
+    }
+
+    @Override
+    public boolean add(E e) {
+        if (root == null) {
+            root = new Node<>(e, null);
+            ++size;
+            return true;
+        }
+        else return insert(root, e);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public boolean remove(Object o) {
+        try {
+            Node<E> node = find(root, (E) o);
+            if (node == null) return false;
+            remove(node);
+            return true;
+        } catch (ClassCastException | NullPointerException e) {
+            return false;
+        }
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public boolean contains(Object o) {
+        try {
+            return find(root, (E) o) != null;
+        } catch (ClassCastException | NullPointerException e) {
+            return false;
+        }
+    }
 
     @Override
     public int size() {
@@ -69,13 +131,23 @@ public class BinarySearchTree<E extends Comparable<E>> implements DynamicSet<E> 
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public boolean contains(Object o) {
-        try {
-            return find(root, (E) o) != null;
-        } catch (ClassCastException | NullPointerException e) {
-            return false;
-        }
+    public DynamicSet<E> union(@NotNull DynamicSet<? extends E> other) {
+        return this.merge(other, AbstractDynamicSet::unionIterator);
+    }
+
+    @Override
+    public DynamicSet<E> intersect(@NotNull DynamicSet<? extends E> other) {
+        return this.merge(other, AbstractDynamicSet::intersectionIterator);
+    }
+
+    @Override
+    public DynamicSet<E> minus(@NotNull DynamicSet<? extends E> other) {
+        return this.merge(other, AbstractDynamicSet::differenceIterator);
+    }
+
+    @Override
+    public boolean isSubsetOf(@NotNull DynamicSet<?> other) {
+        return other.containsAll(this);
     }
 
     @NotNull
@@ -109,32 +181,11 @@ public class BinarySearchTree<E extends Comparable<E>> implements DynamicSet<E> 
     }
 
     @Override
-    public boolean add(E e) {
-        if (root == null) {
-            root = new Node<>(e, null);
-            ++size;
-            return true;
-        }
-        else return insert(root, e);
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public boolean remove(Object o) {
-        try {
-            Node<E> node = find(root, (E) o);
-            if (node == null) return false;
-            remove(node);
-            return true;
-        } catch (ClassCastException | NullPointerException e) {
-            return false;
-        }
-    }
-
-    @Override
     public boolean containsAll(@NotNull Collection<?> c) {
         return c.stream().allMatch(this::contains);
     }
+
+    // ---------- DynamicSet-specific methods ----------
 
     @Override
     public boolean addAll(@NotNull Collection<? extends E> c) {
@@ -157,28 +208,6 @@ public class BinarySearchTree<E extends Comparable<E>> implements DynamicSet<E> 
     public void clear() {
         root = null;
         size = 0;
-    }
-
-    // ---------- DynamicSet-specific methods ----------
-
-    @Override
-    public DynamicSet<E> union(@NotNull DynamicSet<? extends E> other) {
-        return null;
-    }
-
-    @Override
-    public DynamicSet<E> intersect(@NotNull DynamicSet<? extends E> other) {
-        return null;
-    }
-
-    @Override
-    public DynamicSet<E> minus(@NotNull DynamicSet<? extends E> other) {
-        return null;
-    }
-
-    @Override
-    public boolean isSubsetOf(@NotNull DynamicSet<?> other) {
-        return false;
     }
 
     // ---------- Helper (private) methods ----------
@@ -292,6 +321,24 @@ public class BinarySearchTree<E extends Comparable<E>> implements DynamicSet<E> 
         replace(subtree, null);
     }
 
+    /**
+     * Abstract set operation (helper for {@link #union(DynamicSet)}, {@link
+     * #intersect(DynamicSet)}, and {@link #minus(DynamicSet)}).
+     * @param other     other {@link DynamicSet} to operate on
+     * @param mergeFunc function that merges the two sorted & distinct element iterators from {@code
+     *                  this} and {@code that} into one (also of sorted & distinct elements)
+     * @return a new {@link BinarySearchTree} containing the elements given by {@code
+     *         mergeFunc.apply(this.iterator(), other.iterator()}
+     */
+    @SuppressWarnings("unchecked")
+    private DynamicSet<E> merge(@NotNull DynamicSet<? extends E> other,
+                                BiFunction<Iterator<E>, Iterator<E>, Iterator<E>> mergeFunc) {
+        List<E> merged = new ArrayList<>(this.size() + other.size());
+        Iterator<E> mergedIter = mergeFunc.apply(this.iterator(), (Iterator<E>) other.iterator());
+        mergedIter.forEachRemaining(merged::add);
+        return new BinarySearchTree<>(balancedBstFromSortedList(merged), merged.size());
+    }
+
 
     /** implements inorder traversal */
     private class InorderTraversal implements Iterator<E> {
@@ -324,14 +371,7 @@ public class BinarySearchTree<E extends Comparable<E>> implements DynamicSet<E> 
         @Override
         public boolean hasNext() {
             if (!ready) advance();
-            return stack.size() > 1;  // bottom element in stack is dummy node
-        }
-
-        public Node<E> nextNode() {
-            if (!ready) advance();
-            if (!hasNext()) throw new NoSuchElementException("end of iteration");
-            ready = false;  // reset for following iteration
-            return getCurrent();
+            return stack.size() > 0;
         }
 
         @Override
@@ -345,6 +385,13 @@ public class BinarySearchTree<E extends Comparable<E>> implements DynamicSet<E> 
             Node<E> toRemove = getCurrent();
             ready = (toRemove.right != null);
             BinarySearchTree.this.remove(toRemove);
+        }
+
+        public Node<E> nextNode() {
+            if (!ready) advance();
+            if (!hasNext()) throw new NoSuchElementException("end of iteration");
+            ready = false;  // reset for following iteration
+            return getCurrent();
         }
 
         /**
