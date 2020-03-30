@@ -9,15 +9,10 @@ import org.jetbrains.annotations.NotNull;
 
 
 /**
- * Provides a default implementation for some {@link Object} methods for {@link DynamicSet}
- * subclasses whose instances maintain the order of their elements.
- * <p>
- * Subclasses extending this must provide (efficient) stable sorted iteration through {@link
- * #iterator()}.
+ * Provides a default implementations for {@link OrderedDynamicSet} subclasses.
  * @param <E> type of elements
- * @see DynamicSet
  */
-public abstract class AbstractOrderedDynamicSet<E extends Comparable<E>> implements DynamicSet<E> {
+public abstract class AbstractOrderedDynamicSet<E extends Comparable<E>> implements OrderedDynamicSet<E> {
 
     /**
      * Utility class to define an iterator that merges two sources of distinct, sorted elements
@@ -161,10 +156,6 @@ public abstract class AbstractOrderedDynamicSet<E extends Comparable<E>> impleme
         };
     }
 
-
-    /** Provides sorted iteration through the elements of this set. */
-    @Override
-    public abstract @NotNull Iterator<E> iterator();
 
     @Override
     public DynamicSet<E> union(@NotNull DynamicSet<? extends E> other) {
