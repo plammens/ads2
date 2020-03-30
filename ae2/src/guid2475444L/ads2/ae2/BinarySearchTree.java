@@ -87,6 +87,31 @@ public class BinarySearchTree<E extends Comparable<E>> extends AbstractOrderedDy
     }
 
     @Override
+    public boolean isEmpty() {
+        return root == null;
+    }
+
+    /** @return the height of this tree */
+    public int getHeight() {
+        return computeHeight(root);
+    }
+
+    /**
+     * Compute the height of a tree
+     * @param tree root node of the tree
+     * @return the height of the tree rooted at {@code tree}
+     */
+    private static <E> int computeHeight(Node<E> tree) {
+        if (tree == null) return 0;
+        return 1 + Math.max(computeHeight(tree.left), computeHeight(tree.right));
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
     public boolean add(E e) {
         if (root == null) {
             root = new Node<>(e, null);
@@ -117,16 +142,6 @@ public class BinarySearchTree<E extends Comparable<E>> extends AbstractOrderedDy
         } catch (ClassCastException | NullPointerException e) {
             return false;
         }
-    }
-
-    @Override
-    public int size() {
-        return size;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return root == null;
     }
 
     @NotNull
