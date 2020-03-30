@@ -5,6 +5,8 @@ import static java.lang.String.join;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import org.jetbrains.annotations.NotNull;
+
 
 /**
  * Provides a default implementation for some {@link Object} methods for {@link DynamicSet}
@@ -21,12 +23,12 @@ public abstract class AbstractDynamicSet<E extends Comparable<E>> implements Dyn
      * @see #intersectionIterator(Iterator, Iterator)
      */
     private static abstract class AbstractMergeIterator<T> implements Iterator<T> {
-        Iterator<T> it1, it2;
+        Iterator<? extends T> it1, it2;
         protected T elem1, elem2;
         protected boolean advance1 = true, advance2 = true;
         private T cachedNext;
 
-        public AbstractMergeIterator(Iterator<T> it1, Iterator<T> it2) {
+        public AbstractMergeIterator(Iterator<? extends T> it1, Iterator<? extends T> it2) {
             this.it1 = it1;
             this.it2 = it2;
         }
@@ -64,7 +66,7 @@ public abstract class AbstractDynamicSet<E extends Comparable<E>> implements Dyn
      * @return a union iterator of {@code it1} and {@code it2} as described above
      */
     protected static <T extends Comparable<T>>
-    Iterator<T> unionIterator(Iterator<T> it1, Iterator<T> it2) {
+    Iterator<T> unionIterator(Iterator<? extends T> it1, Iterator<? extends T> it2) {
         return new AbstractMergeIterator<>(it1, it2) {
             @Override
             public boolean hasNext() {
@@ -104,7 +106,7 @@ public abstract class AbstractDynamicSet<E extends Comparable<E>> implements Dyn
      * @return an intersection iterator of {@code it1} and {@code it2} as described above
      */
     protected static <T extends Comparable<T>>
-    Iterator<T> intersectionIterator(Iterator<T> it1, Iterator<T> it2) {
+    Iterator<T> intersectionIterator(Iterator<? extends T> it1, Iterator<? extends T> it2) {
         return new AbstractMergeIterator<>(it1, it2) {
             @Override
             public T pollNext() {
@@ -131,7 +133,7 @@ public abstract class AbstractDynamicSet<E extends Comparable<E>> implements Dyn
      * @return a difference iterator of {@code it1} and {@code it2} as described above
      */
     protected static <T extends Comparable<T>>
-    Iterator<T> differenceIterator(Iterator<T> it1, Iterator<T> it2) {
+    Iterator<T> differenceIterator(Iterator<? extends T> it1, Iterator<? extends T> it2) {
         return new AbstractMergeIterator<>(it1, it2) {
             @Override
             public T pollNext() {
@@ -173,5 +175,4 @@ public abstract class AbstractDynamicSet<E extends Comparable<E>> implements Dyn
     public String toString() {
         return "{" + join(", ", (Iterable<String>) this.stream().map(E::toString)::iterator) + "}";
     }
-
 }
