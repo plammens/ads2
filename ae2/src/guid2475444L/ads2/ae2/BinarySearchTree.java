@@ -62,11 +62,11 @@ public class BinarySearchTree<E extends Comparable<E>> extends AbstractOrderedDy
      * @return the root {@link Node} of a new perfectly balanced Binary Search Tree filled with the
      *         elements from {@code sorted}
      */
-    private static <E extends Comparable<E>> Node<E> balancedBstFromSortedList(List<E> sorted) {
+    public static <E extends Comparable<E>> Node<E> balancedFromSortedList(List<E> sorted) {
         int n = sorted.size(), mid = n / 2;
         if (n == 0) return null;
-        Node<E> left = balancedBstFromSortedList(sorted.subList(0, mid)),
-                right = balancedBstFromSortedList(sorted.subList(mid + 1, n)),
+        Node<E> left = balancedFromSortedList(sorted.subList(0, mid)),
+                right = balancedFromSortedList(sorted.subList(mid + 1, n)),
                 root = new Node<>(sorted.get(mid), null, left, right);
         if (left != null) left.parent = root;
         if (right != null) right.parent = root;
@@ -200,7 +200,7 @@ public class BinarySearchTree<E extends Comparable<E>> extends AbstractOrderedDy
     protected OrderedDynamicSet<E> fromSorted(Iterator<E> iter) {
         List<E> sorted = new ArrayList<>();
         iter.forEachRemaining(sorted::add);
-        return new BinarySearchTree<>(balancedBstFromSortedList(sorted), sorted.size());
+        return new BinarySearchTree<>(balancedFromSortedList(sorted), sorted.size());
     }
 
     /**
