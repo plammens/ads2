@@ -9,8 +9,7 @@ import org.jetbrains.annotations.NotNull;
  * Defines the dynamic set ADT.
  * <p>
  * The Dynamic Set is an abstract data type (ADT) that can store distinct elements, without any
- * particular order. The elements must implement {@link Comparable} nevertheless so that certain
- * implementations can be possible.
+ * particular order.
  * <p>
  * Cannot contain {@code null} values.
  * <p>
@@ -21,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
  * @param <E> type of the elements stored in this set
  * @author - Paolo Lammens (2475444L)
  */
-public interface DynamicSet<E extends Comparable<E>> extends Collection<E> {
+public interface DynamicSet<E> extends Collection<E> {
 
     /**
      * Add an element to this set, if not present already.
