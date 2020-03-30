@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.ListIterator;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 
 /**
@@ -35,27 +36,16 @@ public class DoublyLinkedListSet<E extends Comparable<E>> extends AbstractOrdere
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public boolean remove(Object x) {
-        try {
-            Iterator<E> iter = list.iterator();
-            while (iter.hasNext()) {
-                int comparison = iter.next().compareTo((E) x);
-                if (comparison == 0) {
-                    iter.remove();
-                    return true;
-                }
-                else if (comparison > 0) return false;
-            }
-            return false;
-        } catch (ClassCastException e) {
-            return false;
-        }
+        ListIterator<E> iter = find(x);
+        if (iter == null) return false;
+        iter.remove();
+        return true;
     }
 
     @Override
     public boolean contains(Object x) {
-        return list.contains(x);
+        return find(x) != null;
     }
 
     @Override
@@ -71,7 +61,12 @@ public class DoublyLinkedListSet<E extends Comparable<E>> extends AbstractOrdere
     // ----- methods inherited from AbstractDynamicSet<E> -----
 
     @Override
-    protected DynamicSet<E> fromSorted(Iterator<E> iter) {
+    protected OrderedDynamicSet<E> newEmptySet() {
+        return new DoublyLinkedListSet<>();
+    }
+
+    @Override
+    protected OrderedDynamicSet<E> fromSorted(Iterator<E> iter) {
         DoublyLinkedListSet<E> set = new DoublyLinkedListSet<>();
         iter.forEachRemaining(set.list::add);
         return set;
@@ -99,6 +94,8 @@ public class DoublyLinkedListSet<E extends Comparable<E>> extends AbstractOrdere
 
     @Override
     public boolean removeAll(@NotNull Collection<?> c) {
+        // the naive approach gives O(n*m) complexity
+        // sorting c gives us O(m*log(m) + n + m) = O(m*log(m)) complexity
         return list.removeAll(c);
     }
 
@@ -124,6 +121,33 @@ public class DoublyLinkedListSet<E extends Comparable<E>> extends AbstractOrdere
     public <T> T[] toArray(@NotNull T[] a) {
         // noinspection SuspiciousToArrayCall
         return list.toArray(a);
+    }
+
+    // ----- helper methods ----
+
+    /**
+     * Find an element in this set
+     * @param o value to search for in this set
+     * @return a list iterator whose last call to {@link ListIterator#next()} returned the element
+     *         of the {@link #list} equal to {@code x}, or {@code null} if not present
+     */
+    @Nullable
+    @SuppressWarnings("unchecked")
+    private ListIterator<E> find(Object o) {
+        try {
+            E x = (E) o;
+            if (list.getFirst().compareTo(x) > 0 || list.getLast().compareTo(x) < 0)
+                return null;  // early exit if x is outwith the min-max range of this
+            ListIterator<E> iter = list.listIterator();
+            while (iter.hasNext()) {
+                int comparison = iter.next().compareTo(x);
+                if (comparison == 0) return iter;
+                else if (comparison > 0) return null;
+            }
+            return null;
+        } catch (ClassCastException e) {
+            return null;  // incompatible type; cannot be present
+        }
     }
 
 }

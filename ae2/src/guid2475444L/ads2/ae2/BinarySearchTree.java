@@ -191,6 +191,18 @@ public class BinarySearchTree<E extends Comparable<E>> extends AbstractOrderedDy
 
     // ---------- Helper (private) methods ----------
 
+    @Override
+    protected OrderedDynamicSet<E> newEmptySet() {
+        return new BinarySearchTree<>();
+    }
+
+    @Override
+    protected OrderedDynamicSet<E> fromSorted(Iterator<E> iter) {
+        List<E> sorted = new ArrayList<>();
+        iter.forEachRemaining(sorted::add);
+        return new BinarySearchTree<>(balancedBstFromSortedList(sorted), sorted.size());
+    }
+
     /**
      * Insert a new node with a given value
      * @param root  root of the subtree to insert the new node in
@@ -298,13 +310,6 @@ public class BinarySearchTree<E extends Comparable<E>> extends AbstractOrderedDy
      */
     private void unlink(@NotNull Node<E> subtree) {
         replace(subtree, null);
-    }
-
-    @Override
-    protected DynamicSet<E> fromSorted(Iterator<E> iter) {
-        List<E> sorted = new ArrayList<>();
-        iter.forEachRemaining(sorted::add);
-        return new BinarySearchTree<>(balancedBstFromSortedList(sorted), sorted.size());
     }
 
 

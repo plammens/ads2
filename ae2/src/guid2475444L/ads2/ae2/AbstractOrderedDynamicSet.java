@@ -159,22 +159,64 @@ public abstract class AbstractOrderedDynamicSet<E extends Comparable<E>> impleme
 
     @Override
     public DynamicSet<E> union(@NotNull DynamicSet<? extends E> other) {
-        return fromSorted(unionIterator(this.iterator(), other.iterator()));
+        if (other instanceof OrderedDynamicSet) //noinspection unchecked
+            return union((OrderedDynamicSet<? extends E>) other);
+        OrderedDynamicSet<E> union = newEmptySet();
+        union.addAll(this);
+        union.addAll(other);
+        return union;
     }
 
     @Override
     public DynamicSet<E> intersect(@NotNull DynamicSet<? extends E> other) {
-        return fromSorted(intersectionIterator(this.iterator(), other.iterator()));
+        if (other instanceof OrderedDynamicSet) //noinspection unchecked
+            return intersect((OrderedDynamicSet<? extends E>) other);
+        OrderedDynamicSet<E> intersection = newEmptySet();
+        intersection.addAll(this);
+        intersection.retainAll(other);
+        return intersection;
     }
 
     @Override
     public DynamicSet<E> minus(@NotNull DynamicSet<? extends E> other) {
-        return fromSorted(differenceIterator(this.iterator(), other.iterator()));
+        if (other instanceof OrderedDynamicSet) //noinspection unchecked
+            return minus((OrderedDynamicSet<? extends E>) other);
+        OrderedDynamicSet<E> difference = newEmptySet();
+        difference.addAll(this);
+        difference.removeAll(other);
+        return difference;
     }
 
     @Override
     public boolean isSubsetOf(@NotNull DynamicSet<?> other) {
+        if (other instanceof OrderedDynamicSet)
+            try {
+                //noinspection unchecked
+                return isSubsetOf((OrderedDynamicSet<? extends E>) other);
+            } catch (ClassCastException e) { return false; }
         return other.containsAll(this);
+    }
+
+    // Optimized versions of set operations:
+
+    /** optimized version of {@link #union(DynamicSet)} */
+    public OrderedDynamicSet<E> union(@NotNull OrderedDynamicSet<? extends E> other) {
+        return fromSorted(unionIterator(this.iterator(), other.iterator()));
+    }
+
+    /** optimized version of {@link #intersect(DynamicSet)} */
+    public OrderedDynamicSet<E> intersect(@NotNull OrderedDynamicSet<? extends E> other) {
+        return fromSorted(intersectionIterator(this.iterator(), other.iterator()));
+    }
+
+    /** optimized version of {@link #minus(DynamicSet)} */
+    public OrderedDynamicSet<E> minus(@NotNull OrderedDynamicSet<? extends E> other) {
+        return fromSorted(differenceIterator(this.iterator(), other.iterator()));
+    }
+
+    /** optimized version of {@link #isSubsetOf(DynamicSet)} */
+    boolean isSubsetOf(@NotNull OrderedDynamicSet<? extends E> other) {
+        return !differenceIterator(this.iterator(), other.iterator()).hasNext();
     }
 
     /**
@@ -182,7 +224,10 @@ public abstract class AbstractOrderedDynamicSet<E extends Comparable<E>> impleme
      * @return a new instance of the {@link DynamicSet} subclass implementing this filled with
      *         elements from {@code iter}
      */
-    protected abstract DynamicSet<E> fromSorted(Iterator<E> iter);
+    protected abstract OrderedDynamicSet<E> fromSorted(Iterator<E> iter);
+
+    /** @return a new empty instance of the {@link OrderedDynamicSet} */
+    protected abstract OrderedDynamicSet<E> newEmptySet();
 
     @Override
     public boolean equals(Object obj) {
