@@ -10,11 +10,14 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * Provides a default implementation for some {@link Object} methods for {@link DynamicSet}
- * implementors to inherit, along with some helper methods.
+ * subclasses whose instances maintain the order of their elements.
+ * <p>
+ * Subclasses extending this must provide (efficient) stable sorted iteration through {@link
+ * #iterator()}.
  * @param <E> type of elements
  * @see DynamicSet
  */
-public abstract class AbstractDynamicSet<E extends Comparable<E>> implements DynamicSet<E> {
+public abstract class AbstractOrderedDynamicSet<E extends Comparable<E>> implements DynamicSet<E> {
 
     /**
      * Utility class to define an iterator that merges two sources of distinct, sorted elements
@@ -56,6 +59,7 @@ public abstract class AbstractDynamicSet<E extends Comparable<E>> implements Dyn
             if (advance2) elem2 = it2.next();
         }
     }
+
 
     /**
      * Return an iterator that iterates in order over all distinct elements from two sorted &
@@ -156,6 +160,38 @@ public abstract class AbstractDynamicSet<E extends Comparable<E>> implements Dyn
             }
         };
     }
+
+
+    /** Provides sorted iteration through the elements of this set. */
+    @Override
+    public abstract @NotNull Iterator<E> iterator();
+
+    @Override
+    public DynamicSet<E> union(@NotNull DynamicSet<? extends E> other) {
+        return fromSorted(unionIterator(this.iterator(), other.iterator()));
+    }
+
+    @Override
+    public DynamicSet<E> intersect(@NotNull DynamicSet<? extends E> other) {
+        return fromSorted(intersectionIterator(this.iterator(), other.iterator()));
+    }
+
+    @Override
+    public DynamicSet<E> minus(@NotNull DynamicSet<? extends E> other) {
+        return fromSorted(differenceIterator(this.iterator(), other.iterator()));
+    }
+
+    @Override
+    public boolean isSubsetOf(@NotNull DynamicSet<?> other) {
+        return other.containsAll(this);
+    }
+
+    /**
+     * @param iter source of sorted & distinct elements
+     * @return a new instance of the {@link DynamicSet} subclass implementing this filled with
+     *         elements from {@code iter}
+     */
+    protected abstract DynamicSet<E> fromSorted(Iterator<E> iter);
 
     @Override
     public boolean equals(Object obj) {

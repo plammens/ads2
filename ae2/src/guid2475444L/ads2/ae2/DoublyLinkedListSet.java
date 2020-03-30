@@ -2,6 +2,7 @@ package guid2475444L.ads2.ae2;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.ListIterator;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -10,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
  * {@link DynamicSet} implementation using a {@link DoublyLinkedList} as the backing container
  * @author - Paolo Lammens (2475444L)
  */
-public class DoublyLinkedListSet<E extends Comparable<E>> extends AbstractDynamicSet<E> {
+public class DoublyLinkedListSet<E extends Comparable<E>> extends AbstractOrderedDynamicSet<E> {
 
     private DoublyLinkedList<E> list = new DoublyLinkedList<>();
 
@@ -18,13 +19,38 @@ public class DoublyLinkedListSet<E extends Comparable<E>> extends AbstractDynami
 
     @Override
     public boolean add(E x) {
-        if (!list.contains(x)) return list.add(x);
-        return false;
+        // insert maintaining sorted order:
+        ListIterator<E> iter = list.listIterator();
+        while (iter.hasNext()) {
+            int comparison = iter.next().compareTo(x);
+            if (comparison == 0) return false;
+            else if (comparison > 0) {
+                iter.previous();
+                iter.add(x);
+                return true;
+            }
+        }
+        iter.add(x);
+        return true;
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public boolean remove(Object x) {
-        return list.remove(x);
+        try {
+            Iterator<E> iter = list.iterator();
+            while (iter.hasNext()) {
+                int comparison = iter.next().compareTo((E) x);
+                if (comparison == 0) {
+                    iter.remove();
+                    return true;
+                }
+                else if (comparison > 0) return false;
+            }
+            return false;
+        } catch (ClassCastException e) {
+            return false;
+        }
     }
 
     @Override
@@ -42,33 +68,13 @@ public class DoublyLinkedListSet<E extends Comparable<E>> extends AbstractDynami
         return list.isEmpty();
     }
 
-    @Override
-    public DynamicSet<E> union(@NotNull DynamicSet<? extends E> other) {
-        DynamicSet<E> union = new DoublyLinkedListSet<>();
-        union.addAll(this);
-        union.addAll(other);
-        return union;
-    }
+    // ----- methods inherited from AbstractDynamicSet<E> -----
 
     @Override
-    public DynamicSet<E> intersect(@NotNull DynamicSet<? extends E> other) {
-        DynamicSet<E> intersection = new DoublyLinkedListSet<>();
-        for (E elem : this)
-            if (other.contains(elem)) intersection.add(elem);
-        return intersection;
-    }
-
-    @Override
-    public DynamicSet<E> minus(@NotNull DynamicSet<? extends E> other) {
-        DynamicSet<E> difference = new DoublyLinkedListSet<>();
-        difference.addAll(this);
-        difference.removeAll(other);
-        return difference;
-    }
-
-    @Override
-    public boolean isSubsetOf(@NotNull DynamicSet<?> other) {
-        return other.containsAll(this);
+    protected DynamicSet<E> fromSorted(Iterator<E> iter) {
+        DoublyLinkedListSet<E> set = new DoublyLinkedListSet<>();
+        iter.forEachRemaining(set.list::add);
+        return set;
     }
 
     // ----- methods inherited from Collection<E> ----

@@ -3,7 +3,6 @@ package guid2475444L.ads2.ae2;
 
 import java.lang.reflect.Array;
 import java.util.*;
-import java.util.function.BiFunction;
 
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -19,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
  * relevant operations have been redefined here in {@link DynamicSet}.
  * @author - Paolo Lammens (2475444L)
  */
-public class BinarySearchTree<E extends Comparable<E>> extends AbstractDynamicSet<E> {
+public class BinarySearchTree<E extends Comparable<E>> extends AbstractOrderedDynamicSet<E> {
 
     private static class Node<E> {
         enum ChildType {LEFT, RIGHT, ORPHAN}
@@ -128,26 +127,6 @@ public class BinarySearchTree<E extends Comparable<E>> extends AbstractDynamicSe
     @Override
     public boolean isEmpty() {
         return root == null;
-    }
-
-    @Override
-    public DynamicSet<E> union(@NotNull DynamicSet<? extends E> other) {
-        return this.merge(other, AbstractDynamicSet::unionIterator);
-    }
-
-    @Override
-    public DynamicSet<E> intersect(@NotNull DynamicSet<? extends E> other) {
-        return this.merge(other, AbstractDynamicSet::intersectionIterator);
-    }
-
-    @Override
-    public DynamicSet<E> minus(@NotNull DynamicSet<? extends E> other) {
-        return this.merge(other, AbstractDynamicSet::differenceIterator);
-    }
-
-    @Override
-    public boolean isSubsetOf(@NotNull DynamicSet<?> other) {
-        return other.containsAll(this);
     }
 
     @NotNull
@@ -321,22 +300,11 @@ public class BinarySearchTree<E extends Comparable<E>> extends AbstractDynamicSe
         replace(subtree, null);
     }
 
-    /**
-     * Abstract set operation (helper for {@link #union(DynamicSet)}, {@link
-     * #intersect(DynamicSet)}, and {@link #minus(DynamicSet)}).
-     * @param other     other {@link DynamicSet} to operate on
-     * @param mergeFunc function that merges the two sorted & distinct element iterators from {@code
-     *                  this} and {@code that} into one (also of sorted & distinct elements)
-     * @return a new {@link BinarySearchTree} containing the elements given by {@code
-     *         mergeFunc.apply(this.iterator(), other.iterator()}
-     */
-    @SuppressWarnings("unchecked")
-    private DynamicSet<E> merge(@NotNull DynamicSet<? extends E> other,
-                                BiFunction<Iterator<E>, Iterator<E>, Iterator<E>> mergeFunc) {
-        List<E> merged = new ArrayList<>(this.size() + other.size());
-        Iterator<E> mergedIter = mergeFunc.apply(this.iterator(), (Iterator<E>) other.iterator());
-        mergedIter.forEachRemaining(merged::add);
-        return new BinarySearchTree<>(balancedBstFromSortedList(merged), merged.size());
+    @Override
+    protected DynamicSet<E> fromSorted(Iterator<E> iter) {
+        List<E> sorted = new ArrayList<>();
+        iter.forEachRemaining(sorted::add);
+        return new BinarySearchTree<>(balancedBstFromSortedList(sorted), sorted.size());
     }
 
 
