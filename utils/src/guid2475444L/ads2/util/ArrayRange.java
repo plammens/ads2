@@ -1,4 +1,4 @@
-package guid2475444L.ads2.ae1.utils;
+package guid2475444L.ads2.util;
 
 /** Represents an contiguous index range for an array */
 public class ArrayRange {

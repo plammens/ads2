@@ -27,5 +27,6 @@
     </orderEntry>
     <orderEntry type="library" name="org.jetbrains:annotations:19.0.0" level="project" />
     <orderEntry type="library" name="org.apache.commons:commons-lang3:3.9" level="project" />
+    <orderEntry type="module" module-name="utils" />
   </component>
 </module>

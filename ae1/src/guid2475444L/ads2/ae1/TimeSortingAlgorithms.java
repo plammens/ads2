@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 import guid2475444L.ads2.ae1.sorter.Sorter;
 import guid2475444L.ads2.ae1.sorters.MergeSort;
 import guid2475444L.ads2.ae1.sorters.QuickSort;
-import guid2475444L.ads2.ae1.utils.Profiler;
+import guid2475444L.ads2.util.Profiler;
 import org.apache.commons.cli.*;
 
 
@@ -34,7 +34,7 @@ public class TimeSortingAlgorithms {
 
     static {
         // set up CLI options
-        final String algorithmsDescription = "specify the sorting algorithms to time against "
+        final String algorithmsDescr = "specify the sorting algorithms to time against "
                 + "input as space separated tokens following the syntax `<sorter-name>["
                 + "(<constructor-arg>)]`, where <sorter-name> is the unqualified name of a class "
                 + "in guid2475444L.ads2.ae1.sorters and <constructor-arg> is the constructor "
@@ -45,7 +45,7 @@ public class TimeSortingAlgorithms {
         CLI_OPTIONS.addOption("h", "help", false, "show this help message and exit");
         CLI_OPTIONS.addOption(Option.builder("a").longOpt("algorithms")
                                     .hasArgs().argName("sorter...")
-                                    .desc(algorithmsDescription).build());
+                                    .desc(algorithmsDescr).build());
         CLI_OPTIONS.addOption(new Option("r", "repeats", true, repeatsDescription));
     }
 
