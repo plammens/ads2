@@ -113,8 +113,8 @@ public interface DynamicSet<E> extends Collection<E> {
      * Alternative to {@code a.union(b)}
      * @see #union(DynamicSet)
      */
-    static <U extends Comparable<U>> DynamicSet<U> union(@NotNull DynamicSet<? extends U> a,
-                                                         @NotNull DynamicSet<? extends U> b) {
+    static <U> DynamicSet<U> union(@NotNull DynamicSet<? extends U> a,
+                                   @NotNull DynamicSet<? extends U> b) {
         //noinspection unchecked
         return ((DynamicSet<U>) a).union(b);
     }
@@ -123,8 +123,8 @@ public interface DynamicSet<E> extends Collection<E> {
      * Alternative to {@code a.intersect(b)}
      * @see #intersect
      */
-    static <U extends Comparable<U>> DynamicSet<U> intersection(@NotNull DynamicSet<? extends U> a,
-                                                                @NotNull DynamicSet<? extends U> b) {
+    static <U> DynamicSet<U> intersection(@NotNull DynamicSet<? extends U> a,
+                                          @NotNull DynamicSet<? extends U> b) {
         //noinspection unchecked
         return ((DynamicSet<U>) a).intersect(b);
     }
@@ -133,8 +133,8 @@ public interface DynamicSet<E> extends Collection<E> {
      * Alternative to {@code a.minus(b)}
      * @see #minus
      */
-    static <U extends Comparable<U>> DynamicSet<U> difference(@NotNull DynamicSet<? extends U> a,
-                                                              @NotNull DynamicSet<? extends U> b) {
+    static <U> DynamicSet<U> difference(@NotNull DynamicSet<? extends U> a,
+                                        @NotNull DynamicSet<? extends U> b) {
         //noinspection unchecked
         return ((DynamicSet<U>) a).minus(b);
     }
