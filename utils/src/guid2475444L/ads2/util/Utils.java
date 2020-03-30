@@ -1,13 +1,23 @@
-package guid2475444L.ads2.ae2;
+package guid2475444L.ads2.util;
 
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
-/** Various static utilities */
 public final class Utils {
+    public static List<Integer> readIntList(InputStream in) {
+        Scanner sc = new Scanner(in);
+        List<Integer> list = new ArrayList<>();
+        while (sc.hasNextInt())
+            list.add(sc.nextInt());
+        sc.close();
+        return list;
+    }
 
     /**
      * Same as {@link Collection#contains(Object)} but with gentle handling of {@link
@@ -32,5 +42,4 @@ public final class Utils {
     public static <E> List<E> concat(List<? extends E> a, List<? extends E> b) {
         return Stream.concat(a.stream(), b.stream()).collect(Collectors.toList());
     }
-
 }

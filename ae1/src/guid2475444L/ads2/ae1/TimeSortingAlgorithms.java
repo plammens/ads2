@@ -1,7 +1,7 @@
 package guid2475444L.ads2.ae1;
 
-import static guid2475444L.ads2.ae1.utils.Utils.readIntList;
 import static guid2475444L.ads2.ae1.utils.Utils.toIntArray;
+import static guid2475444L.ads2.util.Utils.readIntList;
 
 import java.io.FileInputStream;
 import java.io.IOException;

@@ -1,9 +1,6 @@
 package guid2475444L.ads2.ae1.utils;
 
-import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 
 /** Various static utilities */
@@ -34,15 +31,6 @@ public final class Utils {
         for (int i = 0; i < arr.size(); ++i)
             copy[i] = arr.get(i);
         return copy;
-    }
-
-    public static List<Integer> readIntList(InputStream in) {
-        Scanner sc = new Scanner(in);
-        List<Integer> list = new ArrayList<>();
-        while (sc.hasNextInt())
-            list.add(sc.nextInt());
-        sc.close();
-        return list;
     }
 
 }

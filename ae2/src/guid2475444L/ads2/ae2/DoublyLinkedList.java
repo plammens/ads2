@@ -5,6 +5,7 @@ import static java.lang.String.format;
 import java.lang.reflect.Array;
 import java.util.*;
 
+import guid2475444L.ads2.util.Utils;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -202,7 +203,7 @@ public class DoublyLinkedList<E> implements List<E> {
 
     @Override
     public boolean removeAll(@NotNull Collection<?> c) {
-        return removeIf((elem) -> Utils.contains(c, elem));
+        return removeIf((elem) -> guid2475444L.ads2.util.Utils.contains(c, elem));
     }
 
     @Override

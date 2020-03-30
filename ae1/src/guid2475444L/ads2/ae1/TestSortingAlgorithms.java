@@ -1,6 +1,7 @@
 package guid2475444L.ads2.ae1;
 
-import static guid2475444L.ads2.ae1.utils.Utils.*;
+import static guid2475444L.ads2.ae1.utils.Utils.isSorted;
+import static guid2475444L.ads2.ae1.utils.Utils.toIntArray;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -9,6 +10,7 @@ import java.util.List;
 
 import guid2475444L.ads2.ae1.sorter.Sorter;
 import guid2475444L.ads2.ae1.sorters.*;
+import guid2475444L.ads2.util.Utils;
 
 
 public class TestSortingAlgorithms {
@@ -24,7 +26,7 @@ public class TestSortingAlgorithms {
 
         for (String path : args) {
             for (Sorter sorter : sorters) {
-                int[] arr = toIntArray(readIntList(new FileInputStream(path)));
+                int[] arr = toIntArray(Utils.readIntList(new FileInputStream(path)));
                 sorter.sort(arr);
                 System.out.print(sorter.getClass().getSimpleName() + ": ");
                 System.out.println(isSorted(arr));
